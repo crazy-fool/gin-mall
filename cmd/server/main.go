@@ -21,5 +21,4 @@ func main() {
 	http.Run(app, fmt.Sprintf(":%d", conf.GetInt("http.port")))
 	defer cleanup()
 
-	
 }
