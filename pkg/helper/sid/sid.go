@@ -1,7 +1,7 @@
 package sid
 
 import (
-	"nunu-advance/pkg/helper/convert"
+	"gin-mall/pkg/helper/convert"
 	"github.com/pkg/errors"
 	"github.com/sony/sonyflake"
 )

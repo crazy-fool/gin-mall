@@ -1,15 +1,15 @@
 package middleware
 
 import (
-	"net/http"
-	"regexp"
-	"time"
-
 	"gin-mall/pkg/helper/resp"
 	"gin-mall/pkg/log"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
+	"net/http"
+	"regexp"
+	"time"
 )
 
 type JWT struct {
