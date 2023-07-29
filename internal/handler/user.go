@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"gin-mall/internal/params"
 	"gin-mall/internal/service"
 	"gin-mall/pkg/helper/resp"
 	"github.com/gin-gonic/gin"
@@ -20,15 +21,24 @@ type userHandler struct {
 	userService service.UserService
 }
 
+var user *userHandler
+
 func NewUserHandler(handler *Handler, userService service.UserService) UserHandler {
-	return &userHandler{
+	user = &userHandler{
 		Handler:     handler,
 		userService: userService,
 	}
+	return user
+}
+
+// GetUserHandler 初始化完成之后才能使用
+// 初始化完成之后才能使用
+func GetUserHandler() UserHandler {
+	return user
 }
 
 func (h *userHandler) Register(ctx *gin.Context) {
-	req := new(service.RegisterRequest)
+	req := new(params.RegisterRequest)
 	if err := ctx.ShouldBindJSON(req); err != nil {
 		resp.HandleError(ctx, http.StatusBadRequest, 1, errors.Wrap(err, "invalid request").Error(), nil)
 		return
@@ -43,7 +53,7 @@ func (h *userHandler) Register(ctx *gin.Context) {
 }
 
 func (h *userHandler) Login(ctx *gin.Context) {
-	var req service.LoginRequest
+	var req params.LoginRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		resp.HandleError(ctx, http.StatusBadRequest, 1, errors.Wrap(err, "invalid request").Error(), nil)
 		return
@@ -79,7 +89,7 @@ func (h *userHandler) GetProfile(ctx *gin.Context) {
 func (h *userHandler) UpdateProfile(ctx *gin.Context) {
 	userId := GetUserIdFromCtx(ctx)
 
-	var req service.UpdateProfileRequest
+	var req params.UpdateProfileRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		resp.HandleError(ctx, http.StatusBadRequest, 1, errors.Wrap(err, "invalid request").Error(), nil)
 		return
