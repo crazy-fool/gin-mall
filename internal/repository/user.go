@@ -18,11 +18,10 @@ type userRepository struct {
 	*Repository
 }
 
-func NewUserRepository(r *Repository) UserRepository {
-	return &userRepository{
-		Repository: r,
-	}
+func GetUserRepo() UserRepository {
+	return userRepo
 }
+
 func (r *userRepository) Create(ctx context.Context, user *model.User) error {
 	if err := r.db.Create(user).Error; err != nil {
 		return errors.Wrap(err, "failed to create user")

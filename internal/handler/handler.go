@@ -2,19 +2,20 @@ package handler
 
 import (
 	"gin-mall/internal/middleware"
-	"gin-mall/pkg/log"
 	"github.com/gin-gonic/gin"
 )
 
-type Handler struct {
-	logger *log.Logger
+func init() {
+	hdl = &handler{}
+	userHdl = &userHandler{handler: hdl}
 }
 
-func NewHandler(logger *log.Logger) *Handler {
-	return &Handler{
-		logger: logger,
-	}
+type handler struct {
 }
+
+var hdl *handler
+var userHdl *userHandler
+
 func GetUserIdFromCtx(ctx *gin.Context) string {
 	v, exists := ctx.Get("claims")
 	if !exists {

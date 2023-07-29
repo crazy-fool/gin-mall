@@ -2,6 +2,7 @@ package sid
 
 import (
 	"gin-mall/pkg/helper/convert"
+	"gin-mall/pkg/log"
 	"github.com/pkg/errors"
 	"github.com/sony/sonyflake"
 )
@@ -10,12 +11,19 @@ type Sid struct {
 	sf *sonyflake.Sonyflake
 }
 
-func NewSid() *Sid {
+func init() {
 	sf := sonyflake.NewSonyflake(sonyflake.Settings{})
 	if sf == nil {
 		panic("sonyflake not created")
 	}
-	return &Sid{sf}
+	sid = &Sid{sf}
+	log.GetLog().Info("=============初始化ssid================")
+}
+
+var sid *Sid
+
+func GetSid() *Sid {
+	return sid
 }
 func (s Sid) GenString() (string, error) {
 	id, err := s.sf.NextID()

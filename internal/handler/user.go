@@ -17,24 +17,11 @@ type UserHandler interface {
 }
 
 type userHandler struct {
-	*Handler
-	userService service.UserService
+	*handler
 }
 
-var user *userHandler
-
-func NewUserHandler(handler *Handler, userService service.UserService) UserHandler {
-	user = &userHandler{
-		Handler:     handler,
-		userService: userService,
-	}
-	return user
-}
-
-// GetUserHandler 初始化完成之后才能使用
-// 初始化完成之后才能使用
 func GetUserHandler() UserHandler {
-	return user
+	return userHdl
 }
 
 func (h *userHandler) Register(ctx *gin.Context) {
@@ -44,7 +31,7 @@ func (h *userHandler) Register(ctx *gin.Context) {
 		return
 	}
 
-	if err := h.userService.Register(ctx, req); err != nil {
+	if err := service.GetUserService().Register(ctx, req); err != nil {
 		resp.HandleError(ctx, http.StatusBadRequest, 1, errors.Wrap(err, "invalid request").Error(), nil)
 		return
 	}
@@ -59,7 +46,7 @@ func (h *userHandler) Login(ctx *gin.Context) {
 		return
 	}
 
-	token, err := h.userService.Login(ctx, &req)
+	token, err := service.GetUserService().Login(ctx, &req)
 	if err != nil {
 		resp.HandleError(ctx, http.StatusUnauthorized, 1, err.Error(), nil)
 		return
@@ -77,7 +64,7 @@ func (h *userHandler) GetProfile(ctx *gin.Context) {
 		return
 	}
 
-	user, err := h.userService.GetProfile(ctx, userId)
+	user, err := service.GetUserService().GetProfile(ctx, userId)
 	if err != nil {
 		resp.HandleError(ctx, http.StatusBadRequest, 1, err.Error(), nil)
 		return
@@ -95,7 +82,7 @@ func (h *userHandler) UpdateProfile(ctx *gin.Context) {
 		return
 	}
 
-	if err := h.userService.UpdateProfile(ctx, userId, &req); err != nil {
+	if err := service.GetUserService().UpdateProfile(ctx, userId, &req); err != nil {
 		resp.HandleError(ctx, http.StatusBadRequest, 1, err.Error(), nil)
 		return
 	}

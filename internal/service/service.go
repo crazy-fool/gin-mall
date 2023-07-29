@@ -1,21 +1,10 @@
 package service
 
-import (
-	"gin-mall/internal/middleware"
-	"gin-mall/pkg/helper/sid"
-	"gin-mall/pkg/log"
-)
+import "gin-mall/pkg/log"
 
-type Service struct {
-	logger *log.Logger
-	sid    *sid.Sid
-	jwt    *middleware.JWT
+func init() {
+	log.GetLog().Info("===========初始化UserService=================")
+	userSvc = &userService{}
 }
 
-func NewService(logger *log.Logger, sid *sid.Sid, jwt *middleware.JWT) *Service {
-	return &Service{
-		logger: logger,
-		sid:    sid,
-		jwt:    jwt,
-	}
-}
+var userSvc *userService

@@ -1,11 +1,11 @@
 package middleware
 
 import (
+	"gin-mall/pkg/config"
 	"gin-mall/pkg/helper/resp"
 	"gin-mall/pkg/log"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"net/http"
 	"regexp"
@@ -21,8 +21,15 @@ type MyCustomClaims struct {
 	jwt.RegisteredClaims
 }
 
-func NewJwt(conf *viper.Viper) *JWT {
-	return &JWT{key: []byte(conf.GetString("security.jwt.key"))}
+func init() {
+	jwtInstance = &JWT{key: []byte(config.GetConfig().GetString("security.jwt.key"))}
+	log.GetLog().Info("=================初始化jwt==================")
+}
+
+var jwtInstance *JWT
+
+func GetJwt() *JWT {
+	return jwtInstance
 }
 
 func (j *JWT) GenToken(userId string, expiresAt time.Time) (string, error) {
@@ -61,9 +68,10 @@ func (j *JWT) ParseToken(tokenString string) (*MyCustomClaims, error) {
 	}
 }
 
-func StrictAuth(j *JWT, logger *log.Logger) gin.HandlerFunc {
+func StrictAuth() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		tokenString := ctx.Request.Header.Get("Authorization")
+		logger := log.GetLog()
 		if tokenString == "" {
 			logger.WithContext(ctx).Warn("请求未携带token，无权限访问", zap.Any("data", map[string]interface{}{
 				"url":    ctx.Request.URL,
@@ -74,7 +82,7 @@ func StrictAuth(j *JWT, logger *log.Logger) gin.HandlerFunc {
 			return
 		}
 
-		claims, err := j.ParseToken(tokenString)
+		claims, err := GetJwt().ParseToken(tokenString)
 		if err != nil {
 			logger.WithContext(ctx).Error("token error", zap.Any("data", map[string]interface{}{
 				"url":    ctx.Request.URL,
@@ -91,7 +99,7 @@ func StrictAuth(j *JWT, logger *log.Logger) gin.HandlerFunc {
 	}
 }
 
-func NoStrictAuth(j *JWT, logger *log.Logger) gin.HandlerFunc {
+func NoStrictAuth() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		tokenString := ctx.Request.Header.Get("Authorization")
 		if tokenString == "" {
@@ -105,14 +113,14 @@ func NoStrictAuth(j *JWT, logger *log.Logger) gin.HandlerFunc {
 			return
 		}
 
-		claims, err := j.ParseToken(tokenString)
+		claims, err := GetJwt().ParseToken(tokenString)
 		if err != nil {
 			ctx.Next()
 			return
 		}
 
 		ctx.Set("claims", claims)
-		recoveryLoggerFunc(ctx, logger)
+		recoveryLoggerFunc(ctx, log.GetLog())
 		ctx.Next()
 	}
 }

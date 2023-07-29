@@ -7,7 +7,9 @@ import (
 	"os"
 )
 
-func NewConfig() *viper.Viper {
+var vp *viper.Viper
+
+func init() {
 	envConf := os.Getenv("APP_CONF")
 	if envConf == "" {
 		flag.StringVar(&envConf, "conf", "config/local.yml", "config path, eg: -conf config/local.yml")
@@ -17,9 +19,13 @@ func NewConfig() *viper.Viper {
 		envConf = "local"
 	}
 	fmt.Println("load conf file:", envConf)
-	return getConfig(envConf)
-
+	vp = getConfig(envConf)
 }
+
+func GetConfig() *viper.Viper {
+	return vp
+}
+
 func getConfig(path string) *viper.Viper {
 	conf := viper.New()
 	conf.SetConfigFile(path)
