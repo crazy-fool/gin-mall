@@ -8,20 +8,20 @@ import (
 )
 
 func init() {
-	newDB()
+	db = newDB()
 	newRedis()
 }
 
 var db *gorm.DB
 
 func newDB() *gorm.DB {
-	db, err := gorm.Open(mysql.Open(config.GetConfig().GetString("data.mysql.user")), &gorm.Config{})
+	tdb, err := gorm.Open(mysql.Open(config.GetConfig().GetString("data.mysql.user")), &gorm.Config{})
 	if err != nil {
 		log.GetLog().Info("==================数据库初始化失败=======================")
 		panic(err)
 	}
 	log.GetLog().Info("==================数据库初始化完成=======================")
-	return db
+	return tdb
 }
 
 func GetDB() *gorm.DB {

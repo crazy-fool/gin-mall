@@ -7,6 +7,7 @@ import (
 	"gin-mall/internal/params"
 	"gin-mall/internal/repository"
 	"gin-mall/pkg/helper/sid"
+	"gin-mall/pkg/log"
 	"github.com/pkg/errors"
 	"golang.org/x/crypto/bcrypt"
 	"time"
@@ -46,8 +47,11 @@ func (s *userService) Register(ctx context.Context, req *params.RegisterRequest)
 		Name:     req.Name,
 		Password: string(hashedPassword),
 		Mobile:   req.Mobile,
+		Account:  req.Account,
+		//LastLoginAt: nil,
 	}
 	if err = repository.GetUserRepo().Create(ctx, user); err != nil {
+		log.GetLog().Info("操作失败:" + err.Error())
 		return errors.Wrap(err, "failed to create user")
 	}
 
@@ -55,7 +59,7 @@ func (s *userService) Register(ctx context.Context, req *params.RegisterRequest)
 }
 
 func (s *userService) Login(ctx context.Context, req *params.LoginRequest) (string, error) {
-	user, err := repository.GetUserRepo().GetByAccount(ctx, req.Username)
+	user, err := repository.GetUserRepo().GetByAccount(ctx, req.Account)
 	if err != nil || user == nil {
 		return "", errors.Wrap(err, "failed to get user by username")
 	}
@@ -68,7 +72,6 @@ func (s *userService) Login(ctx context.Context, req *params.LoginRequest) (stri
 	if err != nil {
 		return "", errors.Wrap(err, "failed to generate JWT token")
 	}
-
 	return token, nil
 }
 

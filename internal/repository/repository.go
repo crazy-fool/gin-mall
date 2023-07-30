@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"gin-mall/pkg/db"
 	"gin-mall/pkg/log"
 	"github.com/redis/go-redis/v9"
@@ -18,6 +19,8 @@ func newRepo() {
 		rdb: db.GetRedisClient(),
 	}
 	userRepo = &userRepository{Repository: repo}
+	fmt.Println(repo.db)
+	fmt.Printf("%p", repo.db)
 }
 
 var repo *Repository
