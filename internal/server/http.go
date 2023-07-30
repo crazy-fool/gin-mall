@@ -16,7 +16,7 @@ func NewServerHTTP() *gin.Engine {
 		middleware.CORSMiddleware(),
 		middleware.ResponseLogMiddleware(),
 		middleware.RequestLogMiddleware(),
-		//middleware.SignMiddleware(logger),
+		//middleware.SignMiddleware(),
 	)
 	userHandler := handler.GetUserHandler()
 	// No route group has permission

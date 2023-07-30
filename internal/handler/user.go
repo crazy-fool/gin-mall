@@ -6,7 +6,6 @@ import (
 	"gin-mall/pkg/helper/resp"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
-	"net/http"
 )
 
 type UserHandler interface {
@@ -27,12 +26,12 @@ func GetUserHandler() UserHandler {
 func (h *userHandler) Register(ctx *gin.Context) {
 	req := new(params.RegisterRequest)
 	if err := ctx.ShouldBindJSON(req); err != nil {
-		resp.HandleError(ctx, http.StatusBadRequest, 1, errors.Wrap(err, "invalid request").Error(), nil)
+		resp.HandleError(ctx, 1, "请求参数异常")
 		return
 	}
 
 	if err := service.GetUserService().Register(ctx, req); err != nil {
-		resp.HandleError(ctx, http.StatusBadRequest, 1, errors.Wrap(err, "invalid request").Error(), nil)
+		resp.HandleError(ctx, 1, "操作失败")
 		return
 	}
 
@@ -42,13 +41,13 @@ func (h *userHandler) Register(ctx *gin.Context) {
 func (h *userHandler) Login(ctx *gin.Context) {
 	var req params.LoginRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		resp.HandleError(ctx, http.StatusBadRequest, 1, errors.Wrap(err, "invalid request").Error(), nil)
+		resp.HandleError(ctx, 1, errors.Wrap(err, "invalid request").Error())
 		return
 	}
 
 	token, err := service.GetUserService().Login(ctx, &req)
 	if err != nil {
-		resp.HandleError(ctx, http.StatusUnauthorized, 1, err.Error(), nil)
+		resp.HandleError(ctx, 1, err.Error())
 		return
 	}
 
@@ -60,13 +59,13 @@ func (h *userHandler) Login(ctx *gin.Context) {
 func (h *userHandler) GetProfile(ctx *gin.Context) {
 	userId := GetUserIdFromCtx(ctx)
 	if userId == "" {
-		resp.HandleError(ctx, http.StatusUnauthorized, 1, "unauthorized", nil)
+		resp.HandleError(ctx, 1, "unauthorized")
 		return
 	}
 
 	user, err := service.GetUserService().GetProfile(ctx, userId)
 	if err != nil {
-		resp.HandleError(ctx, http.StatusBadRequest, 1, err.Error(), nil)
+		resp.HandleError(ctx, 1, err.Error())
 		return
 	}
 
@@ -78,12 +77,12 @@ func (h *userHandler) UpdateProfile(ctx *gin.Context) {
 
 	var req params.UpdateProfileRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		resp.HandleError(ctx, http.StatusBadRequest, 1, errors.Wrap(err, "invalid request").Error(), nil)
+		resp.HandleError(ctx, 1, errors.Wrap(err, "invalid request").Error())
 		return
 	}
 
 	if err := service.GetUserService().UpdateProfile(ctx, userId, &req); err != nil {
-		resp.HandleError(ctx, http.StatusBadRequest, 1, err.Error(), nil)
+		resp.HandleError(ctx, 1, err.Error())
 		return
 	}
 

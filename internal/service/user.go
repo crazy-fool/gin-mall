@@ -15,7 +15,7 @@ import (
 type UserService interface {
 	Register(ctx context.Context, req *params.RegisterRequest) error
 	Login(ctx context.Context, req *params.LoginRequest) (string, error)
-	GetProfile(ctx context.Context, userId string) (*model.User, error)
+	GetProfile(ctx context.Context, userId string) (*model.Customer, error)
 	UpdateProfile(ctx context.Context, userId string, req *params.UpdateProfileRequest) error
 }
 
@@ -27,7 +27,7 @@ func GetUserService() UserService {
 
 func (s *userService) Register(ctx context.Context, req *params.RegisterRequest) error {
 	// 检查用户名是否已存在
-	if user, err := repository.GetUserRepo().GetByUsername(ctx, req.Username); err == nil && user != nil {
+	if user, err := repository.GetUserRepo().GetByAccount(ctx, req.Account); err == nil && user != nil {
 		return errors.New("username already exists")
 	}
 
@@ -36,16 +36,16 @@ func (s *userService) Register(ctx context.Context, req *params.RegisterRequest)
 		return errors.Wrap(err, "failed to hash password")
 	}
 	// Generate user ID
-	userId, err := sid.GetSid().GenString()
+	code, err := sid.GetSid().GenString()
 	if err != nil {
 		return errors.Wrap(err, "failed to generate user ID")
 	}
 	// Create a user
-	user := &model.User{
-		UserId:   userId,
-		Username: req.Username,
+	user := &model.Customer{
+		Code:     code,
+		Name:     req.Name,
 		Password: string(hashedPassword),
-		Email:    req.Email,
+		Mobile:   req.Mobile,
 	}
 	if err = repository.GetUserRepo().Create(ctx, user); err != nil {
 		return errors.Wrap(err, "failed to create user")
@@ -55,7 +55,7 @@ func (s *userService) Register(ctx context.Context, req *params.RegisterRequest)
 }
 
 func (s *userService) Login(ctx context.Context, req *params.LoginRequest) (string, error) {
-	user, err := repository.GetUserRepo().GetByUsername(ctx, req.Username)
+	user, err := repository.GetUserRepo().GetByAccount(ctx, req.Username)
 	if err != nil || user == nil {
 		return "", errors.Wrap(err, "failed to get user by username")
 	}
@@ -64,7 +64,7 @@ func (s *userService) Login(ctx context.Context, req *params.LoginRequest) (stri
 	if err != nil {
 		return "", errors.Wrap(err, "failed to hash password")
 	}
-	token, err := middleware.GetJwt().GenToken(user.UserId, time.Now().Add(time.Hour*24*90))
+	token, err := middleware.GetJwt().GenToken(user.Code, time.Now().Add(time.Hour*24*90))
 	if err != nil {
 		return "", errors.Wrap(err, "failed to generate JWT token")
 	}
@@ -72,7 +72,7 @@ func (s *userService) Login(ctx context.Context, req *params.LoginRequest) (stri
 	return token, nil
 }
 
-func (s *userService) GetProfile(ctx context.Context, userId string) (*model.User, error) {
+func (s *userService) GetProfile(ctx context.Context, userId string) (*model.Customer, error) {
 	user, err := repository.GetUserRepo().GetByID(ctx, userId)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get user by ID")
@@ -82,17 +82,5 @@ func (s *userService) GetProfile(ctx context.Context, userId string) (*model.Use
 }
 
 func (s *userService) UpdateProfile(ctx context.Context, userId string, req *params.UpdateProfileRequest) error {
-	user, err := repository.GetUserRepo().GetByID(ctx, userId)
-	if err != nil {
-		return errors.Wrap(err, "failed to get user by ID")
-	}
-
-	user.Email = req.Email
-	user.Nickname = req.Nickname
-
-	if err = repository.GetUserRepo().Update(ctx, user); err != nil {
-		return errors.Wrap(err, "failed to update user")
-	}
-
 	return nil
 }

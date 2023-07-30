@@ -7,7 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"go.uber.org/zap"
-	"net/http"
 	"regexp"
 	"time"
 )
@@ -77,7 +76,7 @@ func StrictAuth() gin.HandlerFunc {
 				"url":    ctx.Request.URL,
 				"params": ctx.Params,
 			}))
-			resp.HandleError(ctx, http.StatusUnauthorized, 1, "no token", nil)
+			resp.HandleError(ctx, 1, "no token")
 			ctx.Abort()
 			return
 		}
@@ -88,7 +87,7 @@ func StrictAuth() gin.HandlerFunc {
 				"url":    ctx.Request.URL,
 				"params": ctx.Params,
 			}))
-			resp.HandleError(ctx, http.StatusUnauthorized, 1, err.Error(), nil)
+			resp.HandleError(ctx, 1, err.Error())
 			ctx.Abort()
 			return
 		}

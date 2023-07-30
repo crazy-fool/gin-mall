@@ -1,29 +1,27 @@
 package middleware
 
 import (
+	"gin-mall/pkg/config"
 	"gin-mall/pkg/helper/md5"
 	"gin-mall/pkg/helper/resp"
-	"gin-mall/pkg/log"
 	"github.com/gin-gonic/gin"
-	"github.com/spf13/viper"
-	"net/http"
 	"sort"
 	"strings"
 )
 
-func SignMiddleware(logger *log.Logger, conf *viper.Viper) gin.HandlerFunc {
+func SignMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		requiredHeaders := []string{"Timestamp", "Nonce", "Sign", "App-Version"}
 
 		for _, header := range requiredHeaders {
 			value, ok := ctx.Request.Header[header]
 			if !ok || len(value) == 0 {
-				resp.HandleError(ctx, http.StatusBadRequest, 1, "sign error.", nil)
+				resp.HandleError(ctx, 1, "sign error.")
 				ctx.Abort()
 				return
 			}
 		}
-
+		conf := config.GetConfig()
 		data := map[string]string{
 			"AppKey":     conf.GetString("security.api_sign.app_key"),
 			"Timestamp":  ctx.Request.Header.Get("Timestamp"),
@@ -44,7 +42,7 @@ func SignMiddleware(logger *log.Logger, conf *viper.Viper) gin.HandlerFunc {
 		str += conf.GetString("security.api_sign.app_security")
 
 		if ctx.Request.Header.Get("Sign") != strings.ToUpper(md5.Md5(str)) {
-			resp.HandleError(ctx, http.StatusBadRequest, 1, "sign error.", nil)
+			resp.HandleError(ctx, 1, "sign error.")
 			ctx.Abort()
 			return
 		}
