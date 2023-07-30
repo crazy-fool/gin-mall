@@ -19,7 +19,20 @@ func HandleSuccess(ctx *gin.Context, data interface{}) {
 	ctx.JSON(http.StatusOK, resp)
 }
 
-func HandleError(ctx *gin.Context, code int, message string) {
-	resp := response{Code: code, Message: message, Data: map[string]string{}}
+func ResponseError(ctx *gin.Context, code int) {
+	msg, ok := responseMessage[code]
+	if !ok {
+		msg = CommonErrorMessage
+	}
+	resp := response{Code: code, Message: msg, Data: map[string]string{}}
+	ctx.JSON(http.StatusOK, resp)
+}
+
+func ResponseErrorWithMsg(ctx *gin.Context, code int, ext string) {
+	msg, ok := responseMessage[code]
+	if !ok {
+		msg = CommonErrorMessage
+	}
+	resp := response{Code: code, Message: msg + ":" + ext, Data: map[string]string{}}
 	ctx.JSON(http.StatusOK, resp)
 }
