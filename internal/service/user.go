@@ -2,10 +2,10 @@ package service
 
 import (
 	"context"
-	"gin-mall/internal/middleware"
 	"gin-mall/internal/model"
 	"gin-mall/internal/params"
 	"gin-mall/internal/repository"
+	"gin-mall/pkg/auth"
 	"gin-mall/pkg/constant"
 	"gin-mall/pkg/helper/sid"
 	"gin-mall/pkg/log"
@@ -68,7 +68,7 @@ func (s *userService) Login(ctx context.Context, req *params.LoginRequest) (stri
 	if err != nil {
 		return "", errors.Wrap(err, "failed to hash password")
 	}
-	token, err := middleware.GetJwt().GenToken(user.Code, time.Now().Add(constant.JwtTtl))
+	token, err := auth.GetJwt().GenToken(user.Code, time.Now().Add(constant.JwtTtl))
 	if err != nil || token == "" {
 		return "", errors.Wrap(err, "failed to generate JWT token")
 	}

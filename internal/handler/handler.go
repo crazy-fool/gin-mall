@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"gin-mall/internal/middleware"
+	"gin-mall/pkg/auth"
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,5 +21,5 @@ func GetUserIdFromCtx(ctx *gin.Context) string {
 	if !exists {
 		return ""
 	}
-	return v.(*middleware.MyCustomClaims).UserId
+	return v.(*auth.MyCustomClaims).UserId
 }

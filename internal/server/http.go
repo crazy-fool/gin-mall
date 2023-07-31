@@ -3,6 +3,7 @@ package server
 import (
 	"gin-mall/internal/handler"
 	"gin-mall/internal/middleware"
+	"gin-mall/pkg/auth"
 	"gin-mall/pkg/helper/resp"
 	"gin-mall/pkg/log"
 	"github.com/gin-gonic/gin"
@@ -33,13 +34,13 @@ func NewServerHTTP() *gin.Engine {
 		noAuthRouter.POST("v1/user/login", userHandler.Login)
 	}
 	// Non-strict permission routing group
-	noStrictAuthRouter := rootGroup.Group("/").Use(middleware.NoStrictAuth())
+	noStrictAuthRouter := rootGroup.Group("/").Use(auth.NoStrictAuth())
 	{
 		noStrictAuthRouter.GET("/user", userHandler.GetProfile)
 	}
 
 	// Strict permission routing group
-	strictAuthRouter := rootGroup.Group("/").Use(middleware.StrictAuth())
+	strictAuthRouter := rootGroup.Group("/").Use(auth.StrictAuth())
 	{
 		strictAuthRouter.PUT("/user", userHandler.UpdateProfile)
 	}
