@@ -22,6 +22,10 @@ func GetUserRepo() UserRepository {
 	return userRepo
 }
 
+func (r *userRepository) SaveData(ctx context.Context) {
+
+}
+
 func (r *userRepository) Create(ctx context.Context, user *model.Customer) error {
 	if err := r.db.Create(user).Error; err != nil {
 		return errors.Wrap(err, "failed to create user")
