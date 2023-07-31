@@ -69,7 +69,7 @@ func (s *userService) Login(ctx context.Context, req *params.LoginRequest) (stri
 		return "", errors.Wrap(err, "failed to hash password")
 	}
 	token, err := middleware.GetJwt().GenToken(user.Code, time.Now().Add(time.Hour*24*90))
-	if err != nil {
+	if err != nil || token == "" {
 		return "", errors.Wrap(err, "failed to generate JWT token")
 	}
 	return token, nil
