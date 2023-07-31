@@ -61,9 +61,8 @@ func (s *userService) Register(ctx context.Context, req *params.RegisterRequest)
 func (s *userService) Login(ctx context.Context, req *params.LoginRequest) (string, error) {
 	user, err := repository.GetUserRepo().GetByAccount(ctx, req.Account)
 	if err != nil || user == nil {
-		return "", errors.Wrap(err, "failed to get user by username")
+		return "", errors.New("failed to get user by account")
 	}
-
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password))
 	if err != nil {
 		return "", errors.Wrap(err, "failed to hash password")
