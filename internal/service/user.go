@@ -61,15 +61,14 @@ func (s *userService) Register(ctx context.Context, req *params.RegisterRequest)
 func (s *userService) Login(ctx context.Context, req *params.LoginRequest) (string, error) {
 	user, err := repository.GetUserRepo().GetByAccount(ctx, req.Account)
 	if err != nil || user == nil {
-		return "", errors.Wrap(err, "failed to get user by username")
+		return "", errors.New("failed to get user by account")
 	}
-
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password))
 	if err != nil {
 		return "", errors.Wrap(err, "failed to hash password")
 	}
 	token, err := middleware.GetJwt().GenToken(user.Code, time.Now().Add(time.Hour*24*90))
-	if err != nil {
+	if err != nil || token == "" {
 		return "", errors.Wrap(err, "failed to generate JWT token")
 	}
 	return token, nil
