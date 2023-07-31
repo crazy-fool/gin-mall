@@ -18,9 +18,10 @@ func NewServerHTTP() *gin.Engine {
 		middleware.RequestLogMiddleware(),
 		//middleware.SignMiddleware(),
 	)
+	rootGroup := r.Group("/api/")
 	userHandler := handler.GetUserHandler()
 	// No route group has permission
-	noAuthRouter := r.Group("/")
+	noAuthRouter := rootGroup.Group("/")
 	{
 		noAuthRouter.GET("/", func(ctx *gin.Context) {
 			log.GetLog().WithContext(ctx).Info("hello")
@@ -28,17 +29,17 @@ func NewServerHTTP() *gin.Engine {
 				"message": "Hi mall",
 			})
 		})
-		noAuthRouter.POST("/register", userHandler.Register)
-		noAuthRouter.POST("/login", userHandler.Login)
+		noAuthRouter.POST("v1/user/register", userHandler.Register)
+		noAuthRouter.POST("v1/user/login", userHandler.Login)
 	}
 	// Non-strict permission routing group
-	noStrictAuthRouter := r.Group("/").Use(middleware.NoStrictAuth())
+	noStrictAuthRouter := rootGroup.Group("/").Use(middleware.NoStrictAuth())
 	{
 		noStrictAuthRouter.GET("/user", userHandler.GetProfile)
 	}
 
 	// Strict permission routing group
-	strictAuthRouter := r.Group("/").Use(middleware.StrictAuth())
+	strictAuthRouter := rootGroup.Group("/").Use(middleware.StrictAuth())
 	{
 		strictAuthRouter.PUT("/user", userHandler.UpdateProfile)
 	}
