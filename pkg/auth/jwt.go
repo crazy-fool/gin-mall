@@ -76,7 +76,7 @@ func StrictAuth() gin.HandlerFunc {
 				"url":    ctx.Request.URL,
 				"params": ctx.Params,
 			}))
-			resp.HandleError(ctx, 1, "no token")
+			resp.ResponseError(ctx, resp.CustomerNotLogin)
 			ctx.Abort()
 			return
 		}
@@ -87,7 +87,7 @@ func StrictAuth() gin.HandlerFunc {
 				"url":    ctx.Request.URL,
 				"params": ctx.Params,
 			}))
-			resp.HandleError(ctx, 1, err.Error())
+			resp.ResponseError(ctx, resp.CustomerNotLogin)
 			ctx.Abort()
 			return
 		}

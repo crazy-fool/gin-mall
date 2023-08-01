@@ -7,6 +7,8 @@ const CommonErrorMessage = "failed" //	失败
 const ParamError = 2                //	请求参数错误
 const OpFailed = 3                  //	操作失败
 const ResourceNotFound = 4          //	数据不存在
+const SignFailed = 5                //	签名失败
+const CheckSignFailed = 6           //	验签失败
 
 const CustomerNotFound = 101 //	用户不存在
 const LoginFailed = 102      //	登录失败

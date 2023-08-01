@@ -5,6 +5,7 @@ import (
 	"gin-mall/pkg/log"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 func init() {
@@ -15,15 +16,28 @@ func init() {
 var db *gorm.DB
 
 func newDB() *gorm.DB {
-	tdb, err := gorm.Open(mysql.Open(config.GetConfig().GetString("data.mysql.user")), &gorm.Config{})
+
+	tdb, err := gorm.Open(mysql.Open(config.GetConfig().GetString("data.mysql.user")), getGormConfig())
 	if err != nil {
 		log.GetLog().Info("==================数据库初始化失败=======================")
 		panic(err)
 	}
+	c, err := tdb.DB()
+	if err != nil {
+		log.GetLog().Info("==================数据库设置连接池失败=======================")
+	}
+	c.SetMaxIdleConns(10)
+	c.SetMaxIdleConns(100)
 	log.GetLog().Info("==================数据库初始化完成=======================")
 	return tdb
 }
 
 func GetDB() *gorm.DB {
 	return db
+}
+
+func getGormConfig() *gorm.Config {
+	return &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	}
 }

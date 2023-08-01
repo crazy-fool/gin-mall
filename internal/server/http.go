@@ -21,6 +21,7 @@ func NewServerHTTP() *gin.Engine {
 	)
 	rootGroup := r.Group("/api/")
 	userHandler := handler.GetUserHandler()
+
 	// No route group has permission
 	noAuthRouter := rootGroup.Group("/")
 	{
@@ -32,6 +33,7 @@ func NewServerHTTP() *gin.Engine {
 		})
 		noAuthRouter.POST("v1/user/register", userHandler.Register)
 		noAuthRouter.POST("v1/user/login", userHandler.Login)
+
 	}
 	// Non-strict permission routing group
 	noStrictAuthRouter := rootGroup.Group("/").Use(auth.NoStrictAuth())
@@ -39,10 +41,12 @@ func NewServerHTTP() *gin.Engine {
 		noStrictAuthRouter.GET("/user", userHandler.GetProfile)
 	}
 
+	categoryHandler := handler.GetCategoryHandler()
 	// Strict permission routing group
 	strictAuthRouter := rootGroup.Group("/").Use(auth.StrictAuth())
 	{
-		strictAuthRouter.PUT("/user", userHandler.UpdateProfile)
+		strictAuthRouter.POST("v1/category/edit", categoryHandler.Edit)
+		strictAuthRouter.GET("v1/category/list", categoryHandler.List)
 	}
 	return r
 }

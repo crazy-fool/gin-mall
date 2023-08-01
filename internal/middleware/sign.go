@@ -16,7 +16,7 @@ func SignMiddleware() gin.HandlerFunc {
 		for _, header := range requiredHeaders {
 			value, ok := ctx.Request.Header[header]
 			if !ok || len(value) == 0 {
-				resp.HandleError(ctx, 1, "sign error.")
+				resp.ResponseError(ctx, resp.SignFailed)
 				ctx.Abort()
 				return
 			}
@@ -42,7 +42,7 @@ func SignMiddleware() gin.HandlerFunc {
 		str += conf.GetString("security.api_sign.app_security")
 
 		if ctx.Request.Header.Get("Sign") != strings.ToUpper(md5.Md5(str)) {
-			resp.HandleError(ctx, 1, "sign error.")
+			resp.ResponseError(ctx, resp.SignFailed)
 			ctx.Abort()
 			return
 		}

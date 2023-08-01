@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"fmt"
 	"gin-mall/pkg/db"
 	"gin-mall/pkg/log"
 	"github.com/redis/go-redis/v9"
@@ -20,13 +19,13 @@ func newRepo() {
 	}
 	userRepo = &userRepository{Repository: repo}
 	spuRepo = &spuRepository{Repository: repo}
-	fmt.Println(repo.db)
-	fmt.Printf("%p", repo.db)
+	categoryRepo = &categoryRepository{Repository: repo}
 }
 
 var repo *Repository
 var userRepo *userRepository
 var spuRepo *spuRepository
+var categoryRepo *categoryRepository
 
 type Repository struct {
 	db     *gorm.DB

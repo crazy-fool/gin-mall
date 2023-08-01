@@ -52,7 +52,7 @@ func (h *userHandler) Login(ctx *gin.Context) {
 	}
 
 	resp.HandleSuccess(ctx, gin.H{
-		"accessToken": token,
+		"token": token,
 	})
 }
 
