@@ -24,7 +24,7 @@ func GetUserHandler() UserHandler {
 }
 
 func (h *userHandler) Register(ctx *gin.Context) {
-	req := new(params.RegisterRequest)
+	req := new(params.RegisterParam)
 	if err := ctx.ShouldBindJSON(req); err != nil {
 		resp.ResponseError(ctx, resp.ParamError)
 		return
@@ -39,7 +39,7 @@ func (h *userHandler) Register(ctx *gin.Context) {
 }
 
 func (h *userHandler) Login(ctx *gin.Context) {
-	var req params.LoginRequest
+	var req params.LoginParam
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		resp.ResponseErrorWithMsg(ctx, resp.CommonError, errors.Wrap(err, "invalid request").Error())
 		return
@@ -75,7 +75,7 @@ func (h *userHandler) GetProfile(ctx *gin.Context) {
 func (h *userHandler) UpdateProfile(ctx *gin.Context) {
 	userId := GetUserIdFromCtx(ctx)
 
-	var req params.UpdateProfileRequest
+	var req params.UpdateProfileParam
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		resp.ResponseErrorWithMsg(ctx, resp.ParamError, err.Error())
 		return

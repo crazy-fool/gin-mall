@@ -19,12 +19,14 @@ func newRepo() {
 		rdb: db.GetRedisClient(),
 	}
 	userRepo = &userRepository{Repository: repo}
+	spuRepo = &spuRepository{Repository: repo}
 	fmt.Println(repo.db)
 	fmt.Printf("%p", repo.db)
 }
 
 var repo *Repository
 var userRepo *userRepository
+var spuRepo *spuRepository
 
 type Repository struct {
 	db     *gorm.DB

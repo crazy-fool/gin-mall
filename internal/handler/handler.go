@@ -8,6 +8,7 @@ import (
 func init() {
 	hdl = &handler{}
 	userHdl = &userHandler{handler: hdl}
+	categoryHdl = &categoryHandler{handler: hdl}
 }
 
 type handler struct {
@@ -15,6 +16,7 @@ type handler struct {
 
 var hdl *handler
 var userHdl *userHandler
+var categoryHdl *categoryHandler
 
 func GetUserIdFromCtx(ctx *gin.Context) string {
 	v, exists := ctx.Get("claims")

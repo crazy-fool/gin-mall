@@ -15,10 +15,10 @@ import (
 )
 
 type UserService interface {
-	Register(ctx context.Context, req *params.RegisterRequest) error
-	Login(ctx context.Context, req *params.LoginRequest) (string, error)
+	Register(ctx context.Context, req *params.RegisterParam) error
+	Login(ctx context.Context, req *params.LoginParam) (string, error)
 	GetProfile(ctx context.Context, userId string) (*model.Customer, error)
-	UpdateProfile(ctx context.Context, userId string, req *params.UpdateProfileRequest) error
+	UpdateProfile(ctx context.Context, userId string, req *params.UpdateProfileParam) error
 }
 
 type userService struct{}
@@ -27,7 +27,7 @@ func GetUserService() UserService {
 	return userSvc
 }
 
-func (s *userService) Register(ctx context.Context, req *params.RegisterRequest) error {
+func (s *userService) Register(ctx context.Context, req *params.RegisterParam) error {
 	// 检查用户名是否已存在
 	if user, err := repository.GetUserRepo().GetByAccount(ctx, req.Account); err == nil && user != nil {
 		return errors.New("username already exists")
@@ -59,7 +59,7 @@ func (s *userService) Register(ctx context.Context, req *params.RegisterRequest)
 	return nil
 }
 
-func (s *userService) Login(ctx context.Context, req *params.LoginRequest) (string, error) {
+func (s *userService) Login(ctx context.Context, req *params.LoginParam) (string, error) {
 	user, err := repository.GetUserRepo().GetByAccount(ctx, req.Account)
 	if err != nil || user == nil {
 		return "", errors.New("failed to get user by account")
@@ -84,6 +84,6 @@ func (s *userService) GetProfile(ctx context.Context, userId string) (*model.Cus
 	return user, nil
 }
 
-func (s *userService) UpdateProfile(ctx context.Context, userId string, req *params.UpdateProfileRequest) error {
+func (s *userService) UpdateProfile(ctx context.Context, userId string, req *params.UpdateProfileParam) error {
 	return nil
 }
