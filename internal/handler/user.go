@@ -26,12 +26,12 @@ func GetUserHandler() UserHandler {
 func (h *userHandler) Register(ctx *gin.Context) {
 	req := new(params.RegisterRequest)
 	if err := ctx.ShouldBindJSON(req); err != nil {
-		resp.HandleError(ctx, 1, "请求参数异常")
+		resp.ResponseError(ctx, resp.ParamError)
 		return
 	}
 
 	if err := service.GetUserService().Register(ctx, req); err != nil {
-		resp.HandleError(ctx, 1, "操作失败")
+		resp.ResponseError(ctx, resp.OpFailed)
 		return
 	}
 
@@ -41,13 +41,13 @@ func (h *userHandler) Register(ctx *gin.Context) {
 func (h *userHandler) Login(ctx *gin.Context) {
 	var req params.LoginRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		resp.HandleError(ctx, 1, errors.Wrap(err, "invalid request").Error())
+		resp.ResponseErrorWithMsg(ctx, resp.CommonError, errors.Wrap(err, "invalid request").Error())
 		return
 	}
 
 	token, err := service.GetUserService().Login(ctx, &req)
 	if err != nil {
-		resp.HandleError(ctx, 1, err.Error())
+		resp.ResponseErrorWithMsg(ctx, resp.CommonError, err.Error())
 		return
 	}
 
@@ -59,13 +59,13 @@ func (h *userHandler) Login(ctx *gin.Context) {
 func (h *userHandler) GetProfile(ctx *gin.Context) {
 	userId := GetUserIdFromCtx(ctx)
 	if userId == "" {
-		resp.HandleError(ctx, 1, "unauthorized")
+		resp.ResponseError(ctx, resp.CustomerNotLogin)
 		return
 	}
 
 	user, err := service.GetUserService().GetProfile(ctx, userId)
 	if err != nil {
-		resp.HandleError(ctx, 1, err.Error())
+		resp.ResponseError(ctx, resp.ResourceNotFound)
 		return
 	}
 
@@ -77,12 +77,12 @@ func (h *userHandler) UpdateProfile(ctx *gin.Context) {
 
 	var req params.UpdateProfileRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		resp.HandleError(ctx, 1, errors.Wrap(err, "invalid request").Error())
+		resp.ResponseErrorWithMsg(ctx, resp.ParamError, err.Error())
 		return
 	}
 
 	if err := service.GetUserService().UpdateProfile(ctx, userId, &req); err != nil {
-		resp.HandleError(ctx, 1, err.Error())
+		resp.ResponseErrorWithMsg(ctx, resp.OpFailed, err.Error())
 		return
 	}
 
