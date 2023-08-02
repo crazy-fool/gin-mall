@@ -47,6 +47,8 @@ func NewServerHTTP() *gin.Engine {
 	{
 		strictAuthRouter.POST("v1/category/edit", categoryHandler.Edit)
 		strictAuthRouter.GET("v1/category/list", categoryHandler.List)
+		strictAuthRouter.GET("v1/category/one-list", categoryHandler.OneList)
+		strictAuthRouter.GET("v1/category/son-list", categoryHandler.SonList)
 	}
 	return r
 }

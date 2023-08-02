@@ -48,6 +48,8 @@ func (r *categoryRepository) GetQuery(ctx context.Context, condition map[string]
 				query.Where("name like ?", "%"+name+"%")
 			}
 			continue
+		} else if k == "parent_id" {
+			query.Where("parent_id = ?", v)
 		}
 	}
 	return query.Order("sort desc")
