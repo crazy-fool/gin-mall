@@ -9,6 +9,6 @@ type CategoryEditParam struct {
 }
 
 type CategoryListParam struct {
-	ParentId *uint `json:"parent_id" uri:"parent_id" `
+	ParentId uint `json:"parent_id" form:"parent_id" `
 	PageSt
 }

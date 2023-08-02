@@ -6,6 +6,7 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+	"gorm.io/gorm/schema"
 )
 
 func init() {
@@ -39,5 +40,9 @@ func GetDB() *gorm.DB {
 func getGormConfig() *gorm.Config {
 	return &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
+		NamingStrategy: schema.NamingStrategy{
+			TablePrefix:   "hmh_",
+			SingularTable: true,
+		},
 	}
 }

@@ -52,7 +52,7 @@ func (h *categoryHandler) List(ctx *gin.Context) {
 // OneList 一级分类列表
 func (h *categoryHandler) OneList(ctx *gin.Context) {
 	param := &params.CategoryListParam{
-		ParentId: new(uint),
+		ParentId: 0,
 	}
 	ret := service.GetCategoryService().GetList(ctx, param)
 	resp.HandleSuccess(ctx, ret)
@@ -61,10 +61,13 @@ func (h *categoryHandler) OneList(ctx *gin.Context) {
 // SonList 一级分类列表
 func (h *categoryHandler) SonList(ctx *gin.Context) {
 	var param params.CategoryListParam
-	if err := ctx.ShouldBindUri(&param); err != nil {
+	if err := ctx.ShouldBind(&param); err != nil {
 		resp.ResponseError(ctx, resp.ParamError)
 		return
 	}
+
+	log.GetLog().Info("查询分类", zap.Any("param", param))
+
 	ret := service.GetCategoryService().GetList(ctx, &param)
 	resp.HandleSuccess(ctx, ret)
 }
