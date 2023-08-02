@@ -45,10 +45,10 @@ type category struct {
 
 	ALL       field.Asterisk
 	ID        field.Int32
-	Name      field.String
-	ParentID  field.Int32
-	IsParent  field.Bool
-	Sort      field.Int32
+	Name      field.String // 类目名称
+	ParentID  field.Int32  // 父id
+	IsParent  field.Bool   // 是否是父id
+	Sort      field.Int32  // 排序
 	CreatedAt field.Time
 	UpdatedAt field.Time
 

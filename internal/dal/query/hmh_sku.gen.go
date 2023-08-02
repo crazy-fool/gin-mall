@@ -46,11 +46,11 @@ type sku struct {
 
 	ALL         field.Asterisk
 	ID          field.Int32
-	Name        field.String
-	Sku         field.String
-	Price       field.Float64
-	MarketPrice field.Float64
-	Img         field.String
+	Name        field.String  // skuname
+	Sku         field.String  // sku
+	Price       field.Float64 // 售价
+	MarketPrice field.Float64 // 市场价
+	Img         field.String  // 图片
 	CreatedAt   field.Time
 	UpdatedAt   field.Time
 

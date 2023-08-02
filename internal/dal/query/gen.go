@@ -17,29 +17,41 @@ import (
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
-		db:       db,
-		Category: newCategory(db, opts...),
-		Sku:      newSku(db, opts...),
-		Spu:      newSpu(db, opts...),
+		db:        db,
+		Category:  newCategory(db, opts...),
+		Customer:  newCustomer(db, opts...),
+		Sku:       newSku(db, opts...),
+		SkuStock:  newSkuStock(db, opts...),
+		Spec:      newSpec(db, opts...),
+		SpecGroup: newSpecGroup(db, opts...),
+		Spu:       newSpu(db, opts...),
 	}
 }
 
 type Query struct {
 	db *gorm.DB
 
-	Category category
-	Sku      sku
-	Spu      spu
+	Category  category
+	Customer  customer
+	Sku       sku
+	SkuStock  skuStock
+	Spec      spec
+	SpecGroup specGroup
+	Spu       spu
 }
 
 func (q *Query) Available() bool { return q.db != nil }
 
 func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
-		db:       db,
-		Category: q.Category.clone(db),
-		Sku:      q.Sku.clone(db),
-		Spu:      q.Spu.clone(db),
+		db:        db,
+		Category:  q.Category.clone(db),
+		Customer:  q.Customer.clone(db),
+		Sku:       q.Sku.clone(db),
+		SkuStock:  q.SkuStock.clone(db),
+		Spec:      q.Spec.clone(db),
+		SpecGroup: q.SpecGroup.clone(db),
+		Spu:       q.Spu.clone(db),
 	}
 }
 
@@ -53,24 +65,36 @@ func (q *Query) WriteDB() *Query {
 
 func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
-		db:       db,
-		Category: q.Category.replaceDB(db),
-		Sku:      q.Sku.replaceDB(db),
-		Spu:      q.Spu.replaceDB(db),
+		db:        db,
+		Category:  q.Category.replaceDB(db),
+		Customer:  q.Customer.replaceDB(db),
+		Sku:       q.Sku.replaceDB(db),
+		SkuStock:  q.SkuStock.replaceDB(db),
+		Spec:      q.Spec.replaceDB(db),
+		SpecGroup: q.SpecGroup.replaceDB(db),
+		Spu:       q.Spu.replaceDB(db),
 	}
 }
 
 type queryCtx struct {
-	Category ICategoryDo
-	Sku      ISkuDo
-	Spu      ISpuDo
+	Category  ICategoryDo
+	Customer  ICustomerDo
+	Sku       ISkuDo
+	SkuStock  ISkuStockDo
+	Spec      ISpecDo
+	SpecGroup ISpecGroupDo
+	Spu       ISpuDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
-		Category: q.Category.WithContext(ctx),
-		Sku:      q.Sku.WithContext(ctx),
-		Spu:      q.Spu.WithContext(ctx),
+		Category:  q.Category.WithContext(ctx),
+		Customer:  q.Customer.WithContext(ctx),
+		Sku:       q.Sku.WithContext(ctx),
+		SkuStock:  q.SkuStock.WithContext(ctx),
+		Spec:      q.Spec.WithContext(ctx),
+		SpecGroup: q.SpecGroup.WithContext(ctx),
+		Spu:       q.Spu.WithContext(ctx),
 	}
 }
 

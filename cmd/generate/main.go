@@ -1,7 +1,6 @@
 package main
 
 import (
-	"gin-mall/internal/dal/model"
 	"gin-mall/pkg/db"
 	"gorm.io/gen"
 )
@@ -44,7 +43,7 @@ func main() {
 	// 如果想给某些表或者model生成自定义方法，可以用ApplyInterface，第一个参数是方法接口，可以参考DIY部分文档定义
 	//g.ApplyInterface(func(method model.Method) {}, model.User{}, g.GenerateModel("company"))
 	//g.GenerateAllTable()
-	g.ApplyBasic(model.Category{}, model.Spu{}, model.Sku{})
+	g.ApplyBasic(g.GenerateAllTable()...)
 	// execute the action of code generation
 	g.Execute()
 

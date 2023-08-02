@@ -49,16 +49,16 @@ type spu struct {
 
 	ALL        field.Asterisk
 	ID         field.Int32
-	Spu        field.String
-	Name       field.String
-	Img        field.String
-	Status     field.Bool
-	BrandBn    field.String
-	StoreBn    field.String
-	SaleCnt    field.Int32
-	PriceRange field.String
-	CreatedAt  field.Time
-	UpdatedAt  field.Time
+	Spu        field.String // spucode
+	Name       field.String // 商品名称
+	Img        field.String // 图片
+	Status     field.Bool   // 状态1启用，0、禁用
+	BrandBn    field.String // 品牌code
+	StoreBn    field.String // 商户号
+	SaleCnt    field.Int32  // 销量
+	PriceRange field.String // 价格区间
+	CreatedAt  field.Time   // 创建时间
+	UpdatedAt  field.Time   // 更新时间
 
 	fieldMap map[string]field.Expr
 }
