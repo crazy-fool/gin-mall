@@ -27,11 +27,11 @@ func newCategory(db *gorm.DB, opts ...gen.DOOption) category {
 
 	tableName := _category.categoryDo.TableName()
 	_category.ALL = field.NewAsterisk(tableName)
-	_category.ID = field.NewInt32(tableName, "id")
+	_category.ID = field.NewInt(tableName, "id")
 	_category.Name = field.NewString(tableName, "name")
-	_category.ParentID = field.NewInt32(tableName, "parent_id")
+	_category.ParentID = field.NewInt(tableName, "parent_id")
 	_category.IsParent = field.NewBool(tableName, "is_parent")
-	_category.Sort = field.NewInt32(tableName, "sort")
+	_category.Sort = field.NewInt(tableName, "sort")
 	_category.CreatedAt = field.NewTime(tableName, "created_at")
 	_category.UpdatedAt = field.NewTime(tableName, "updated_at")
 
@@ -44,11 +44,11 @@ type category struct {
 	categoryDo categoryDo
 
 	ALL       field.Asterisk
-	ID        field.Int32
+	ID        field.Int
 	Name      field.String // 类目名称
-	ParentID  field.Int32  // 父id
+	ParentID  field.Int    // 父id
 	IsParent  field.Bool   // 是否是父id
-	Sort      field.Int32  // 排序
+	Sort      field.Int    // 排序
 	CreatedAt field.Time
 	UpdatedAt field.Time
 
@@ -67,11 +67,11 @@ func (c category) As(alias string) *category {
 
 func (c *category) updateTableName(table string) *category {
 	c.ALL = field.NewAsterisk(table)
-	c.ID = field.NewInt32(table, "id")
+	c.ID = field.NewInt(table, "id")
 	c.Name = field.NewString(table, "name")
-	c.ParentID = field.NewInt32(table, "parent_id")
+	c.ParentID = field.NewInt(table, "parent_id")
 	c.IsParent = field.NewBool(table, "is_parent")
-	c.Sort = field.NewInt32(table, "sort")
+	c.Sort = field.NewInt(table, "sort")
 	c.CreatedAt = field.NewTime(table, "created_at")
 	c.UpdatedAt = field.NewTime(table, "updated_at")
 

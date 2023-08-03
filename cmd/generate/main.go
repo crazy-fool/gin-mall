@@ -3,8 +3,24 @@ package main
 import (
 	"gin-mall/pkg/db"
 	"gorm.io/gen"
+	"gorm.io/gorm"
 	"strings"
 )
+
+// dataMap mapping relationship
+var dataMap = map[string]func(gorm.ColumnType) (dataType string){
+	// int mapping
+	"int": func(columnType gorm.ColumnType) (dataType string) { return "int" },
+
+	// bool mapping
+	"tinyint": func(columnType gorm.ColumnType) (dataType string) {
+		ct, _ := columnType.ColumnType()
+		if strings.HasPrefix(ct, "tinyint(1)") {
+			return "bool"
+		}
+		return "byte"
+	},
+}
 
 func main() {
 
@@ -16,7 +32,7 @@ func main() {
 		OutPath: "./internal/gen/query",
 		Mode:    gen.WithQueryInterface,
 		//if you want the nullable field generation property to be pointer type, set FieldNullable true
-		FieldNullable: true,
+		//FieldNullable: true,
 		//if you want to assign field which has default value in `Create` API, set FieldCoverable true, reference: https://gorm.io/docs/create.html#Default-Values
 		/* FieldCoverable: true,*/
 		// if you want generate field with unsigned integer type, set FieldSignable true
@@ -51,7 +67,7 @@ func main() {
 		tableName = strings.Title(tableName)
 		return strings.Replace(tableName, " ", "", -1)
 	})
-
+	g.WithDataTypeMap(dataMap)
 	// apply diy interfaces on structs or table models
 	// 如果想给某些表或者model生成自定义方法，可以用ApplyInterface，第一个参数是方法接口，可以参考DIY部分文档定义
 	//g.ApplyInterface(func(method model.Method) {}, model.User{}, g.GenerateModel("company"))

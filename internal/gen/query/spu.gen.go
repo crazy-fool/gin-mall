@@ -27,14 +27,14 @@ func newSpu(db *gorm.DB, opts ...gen.DOOption) spu {
 
 	tableName := _spu.spuDo.TableName()
 	_spu.ALL = field.NewAsterisk(tableName)
-	_spu.ID = field.NewInt32(tableName, "id")
+	_spu.ID = field.NewInt(tableName, "id")
 	_spu.Spu = field.NewString(tableName, "spu")
 	_spu.Name = field.NewString(tableName, "name")
 	_spu.Img = field.NewString(tableName, "img")
 	_spu.Status = field.NewBool(tableName, "status")
 	_spu.BrandBn = field.NewString(tableName, "brand_bn")
 	_spu.StoreBn = field.NewString(tableName, "store_bn")
-	_spu.SaleCnt = field.NewInt32(tableName, "sale_cnt")
+	_spu.SaleCnt = field.NewInt(tableName, "sale_cnt")
 	_spu.PriceRange = field.NewString(tableName, "price_range")
 	_spu.CreatedAt = field.NewTime(tableName, "created_at")
 	_spu.UpdatedAt = field.NewTime(tableName, "updated_at")
@@ -48,14 +48,14 @@ type spu struct {
 	spuDo spuDo
 
 	ALL        field.Asterisk
-	ID         field.Int32
+	ID         field.Int
 	Spu        field.String // spucode
 	Name       field.String // 商品名称
 	Img        field.String // 图片
 	Status     field.Bool   // 状态1启用，0、禁用
 	BrandBn    field.String // 品牌code
 	StoreBn    field.String // 商户号
-	SaleCnt    field.Int32  // 销量
+	SaleCnt    field.Int    // 销量
 	PriceRange field.String // 价格区间
 	CreatedAt  field.Time   // 创建时间
 	UpdatedAt  field.Time   // 更新时间
@@ -75,14 +75,14 @@ func (s spu) As(alias string) *spu {
 
 func (s *spu) updateTableName(table string) *spu {
 	s.ALL = field.NewAsterisk(table)
-	s.ID = field.NewInt32(table, "id")
+	s.ID = field.NewInt(table, "id")
 	s.Spu = field.NewString(table, "spu")
 	s.Name = field.NewString(table, "name")
 	s.Img = field.NewString(table, "img")
 	s.Status = field.NewBool(table, "status")
 	s.BrandBn = field.NewString(table, "brand_bn")
 	s.StoreBn = field.NewString(table, "store_bn")
-	s.SaleCnt = field.NewInt32(table, "sale_cnt")
+	s.SaleCnt = field.NewInt(table, "sale_cnt")
 	s.PriceRange = field.NewString(table, "price_range")
 	s.CreatedAt = field.NewTime(table, "created_at")
 	s.UpdatedAt = field.NewTime(table, "updated_at")

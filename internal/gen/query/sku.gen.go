@@ -27,7 +27,7 @@ func newSku(db *gorm.DB, opts ...gen.DOOption) sku {
 
 	tableName := _sku.skuDo.TableName()
 	_sku.ALL = field.NewAsterisk(tableName)
-	_sku.ID = field.NewInt32(tableName, "id")
+	_sku.ID = field.NewInt(tableName, "id")
 	_sku.Name = field.NewString(tableName, "name")
 	_sku.Sku = field.NewString(tableName, "sku")
 	_sku.Price = field.NewFloat64(tableName, "price")
@@ -45,7 +45,7 @@ type sku struct {
 	skuDo skuDo
 
 	ALL         field.Asterisk
-	ID          field.Int32
+	ID          field.Int
 	Name        field.String  // skuname
 	Sku         field.String  // sku
 	Price       field.Float64 // 售价
@@ -69,7 +69,7 @@ func (s sku) As(alias string) *sku {
 
 func (s *sku) updateTableName(table string) *sku {
 	s.ALL = field.NewAsterisk(table)
-	s.ID = field.NewInt32(table, "id")
+	s.ID = field.NewInt(table, "id")
 	s.Name = field.NewString(table, "name")
 	s.Sku = field.NewString(table, "sku")
 	s.Price = field.NewFloat64(table, "price")

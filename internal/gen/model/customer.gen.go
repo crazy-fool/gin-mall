@@ -14,15 +14,15 @@ const TableNameCustomer = "hmh_customer"
 
 // Customer mapped from table <hmh_customer>
 type Customer struct {
-	ID          int32          `gorm:"column:id;type:int(11);primaryKey;autoIncrement:true" json:"id"`
+	ID          int            `gorm:"column:id;type:int(11);primaryKey;autoIncrement:true" json:"id"`
 	Code        string         `gorm:"column:code;type:varchar(50);not null;uniqueIndex:un_code,priority:1;comment:code" json:"code"`        // code
-	Name        *string        `gorm:"column:name;type:varchar(50);comment:姓名" json:"name"`                                                  // 姓名
+	Name        string         `gorm:"column:name;type:varchar(50);comment:姓名" json:"name"`                                                  // 姓名
 	Account     string         `gorm:"column:account;type:varchar(20);not null;uniqueIndex:un_account,priority:1;comment:账号" json:"account"` // 账号
-	Password    *string        `gorm:"column:password;type:varchar(64);comment:密码" json:"password"`                                          // 密码
-	Mobile      *string        `gorm:"column:mobile;type:varchar(15);comment:手机号" json:"mobile"`                                             // 手机号
-	LastLoginAt *time.Time     `gorm:"column:last_login_at;type:datetime;comment:最近登录时间" json:"last_login_at"`                               // 最近登录时间
-	CreatedAt   *time.Time     `gorm:"column:created_at;type:datetime" json:"created_at"`
-	UpdatedAt   *time.Time     `gorm:"column:updated_at;type:datetime" json:"updated_at"`
+	Password    string         `gorm:"column:password;type:varchar(64);comment:密码" json:"password"`                                          // 密码
+	Mobile      string         `gorm:"column:mobile;type:varchar(15);comment:手机号" json:"mobile"`                                             // 手机号
+	LastLoginAt time.Time      `gorm:"column:last_login_at;type:datetime;comment:最近登录时间" json:"last_login_at"`                               // 最近登录时间
+	CreatedAt   time.Time      `gorm:"column:created_at;type:datetime" json:"created_at"`
+	UpdatedAt   time.Time      `gorm:"column:updated_at;type:datetime" json:"updated_at"`
 	DeletedAt   gorm.DeletedAt `gorm:"column:deleted_at;type:datetime;index:idx_deleted_at,priority:1" json:"deleted_at"`
 }
 

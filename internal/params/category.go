@@ -1,11 +1,11 @@
 package params
 
 type CategoryEditParam struct {
-	Id       uint   `json:"id" `
+	Id       int32  `json:"id" `
 	Name     string `json:"name" binding:"required"`
-	ParentId uint   `json:"parent_id"`
-	IsParent uint8  `json:"is_parent"`
-	Sort     uint   `json:"sort" `
+	ParentId *int32 `json:"parent_id"`
+	IsParent *int8  `json:"is_parent"`
+	Sort     *int32 `json:"sort" `
 }
 
 type CategoryListParam struct {
