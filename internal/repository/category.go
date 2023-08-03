@@ -2,16 +2,16 @@ package repository
 
 import (
 	"context"
-	"fmt"
 	"gin-mall/internal/model"
+	"gin-mall/internal/params"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
 )
 
 type CategoryRepository interface {
 	GetById(ctx context.Context, id uint) (*model.Category, error)
-	SaveData(ctx context.Context, category *model.Category) error
-	GetQuery(ctx context.Context, condition map[string]any) *gorm.DB
+	SaveData(ctx context.Context, param *params.CategoryEditParam) (uint, error)
+	GetQuery(ctx context.Context, param *params.CategoryListParam) *gorm.DB
 }
 
 type categoryRepository struct {
@@ -34,23 +34,21 @@ func (r *categoryRepository) GetById(ctx context.Context, id uint) (*model.Categ
 	return &category, nil
 }
 
-func (r *categoryRepository) SaveData(ctx context.Context, category *model.Category) error {
-	return r.db.Save(category).Error
+func (r *categoryRepository) SaveData(ctx context.Context, param *params.CategoryEditParam) (uint, error) {
+	cate := model.Category{
+		Name:     param.Name,
+		ParentId: param.ParentId,
+		IsParent: param.IsParent,
+		Sort:     param.Sort,
+		ID:       param.Id,
+	}
+	return cate.ID, r.db.Save(&cate).Error
 }
 
-func (r *categoryRepository) GetQuery(ctx context.Context, condition map[string]any) *gorm.DB {
+func (r *categoryRepository) GetQuery(ctx context.Context, param *params.CategoryListParam) *gorm.DB {
 	query := r.db.Model(model.Category{})
-	for k, v := range condition {
-
-		if k == "name" {
-			name := fmt.Sprintf("%v", v)
-			if name != "" {
-				query.Where("name like ?", "%"+name+"%")
-			}
-			continue
-		} else if k == "parent_id" {
-			query.Where("parent_id = ?", v)
-		}
+	if param.ParentId != nil {
+		query.Where("parent_id = ?", *param.ParentId)
 	}
 	return query.Order("sort desc")
 }
