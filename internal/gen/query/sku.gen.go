@@ -16,7 +16,7 @@ import (
 
 	"gorm.io/plugin/dbresolver"
 
-	"gin-mall/internal/dal/model"
+	"gin-mall/internal/gen/model"
 )
 
 func newSku(db *gorm.DB, opts ...gen.DOOption) sku {
@@ -83,7 +83,7 @@ func (s *sku) updateTableName(table string) *sku {
 	return s
 }
 
-func (s *sku) WithContext(ctx context.Context) ISkuDo { return s.skuDo.WithContext(ctx) }
+func (s *sku) WithContext(ctx context.Context) *skuDo { return s.skuDo.WithContext(ctx) }
 
 func (s sku) TableName() string { return s.skuDo.TableName() }
 
@@ -124,156 +124,95 @@ func (s sku) replaceDB(db *gorm.DB) sku {
 
 type skuDo struct{ gen.DO }
 
-type ISkuDo interface {
-	gen.SubQuery
-	Debug() ISkuDo
-	WithContext(ctx context.Context) ISkuDo
-	WithResult(fc func(tx gen.Dao)) gen.ResultInfo
-	ReplaceDB(db *gorm.DB)
-	ReadDB() ISkuDo
-	WriteDB() ISkuDo
-	As(alias string) gen.Dao
-	Session(config *gorm.Session) ISkuDo
-	Columns(cols ...field.Expr) gen.Columns
-	Clauses(conds ...clause.Expression) ISkuDo
-	Not(conds ...gen.Condition) ISkuDo
-	Or(conds ...gen.Condition) ISkuDo
-	Select(conds ...field.Expr) ISkuDo
-	Where(conds ...gen.Condition) ISkuDo
-	Order(conds ...field.Expr) ISkuDo
-	Distinct(cols ...field.Expr) ISkuDo
-	Omit(cols ...field.Expr) ISkuDo
-	Join(table schema.Tabler, on ...field.Expr) ISkuDo
-	LeftJoin(table schema.Tabler, on ...field.Expr) ISkuDo
-	RightJoin(table schema.Tabler, on ...field.Expr) ISkuDo
-	Group(cols ...field.Expr) ISkuDo
-	Having(conds ...gen.Condition) ISkuDo
-	Limit(limit int) ISkuDo
-	Offset(offset int) ISkuDo
-	Count() (count int64, err error)
-	Scopes(funcs ...func(gen.Dao) gen.Dao) ISkuDo
-	Unscoped() ISkuDo
-	Create(values ...*model.Sku) error
-	CreateInBatches(values []*model.Sku, batchSize int) error
-	Save(values ...*model.Sku) error
-	First() (*model.Sku, error)
-	Take() (*model.Sku, error)
-	Last() (*model.Sku, error)
-	Find() ([]*model.Sku, error)
-	FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*model.Sku, err error)
-	FindInBatches(result *[]*model.Sku, batchSize int, fc func(tx gen.Dao, batch int) error) error
-	Pluck(column field.Expr, dest interface{}) error
-	Delete(...*model.Sku) (info gen.ResultInfo, err error)
-	Update(column field.Expr, value interface{}) (info gen.ResultInfo, err error)
-	UpdateSimple(columns ...field.AssignExpr) (info gen.ResultInfo, err error)
-	Updates(value interface{}) (info gen.ResultInfo, err error)
-	UpdateColumn(column field.Expr, value interface{}) (info gen.ResultInfo, err error)
-	UpdateColumnSimple(columns ...field.AssignExpr) (info gen.ResultInfo, err error)
-	UpdateColumns(value interface{}) (info gen.ResultInfo, err error)
-	UpdateFrom(q gen.SubQuery) gen.Dao
-	Attrs(attrs ...field.AssignExpr) ISkuDo
-	Assign(attrs ...field.AssignExpr) ISkuDo
-	Joins(fields ...field.RelationField) ISkuDo
-	Preload(fields ...field.RelationField) ISkuDo
-	FirstOrInit() (*model.Sku, error)
-	FirstOrCreate() (*model.Sku, error)
-	FindByPage(offset int, limit int) (result []*model.Sku, count int64, err error)
-	ScanByPage(result interface{}, offset int, limit int) (count int64, err error)
-	Scan(result interface{}) (err error)
-	Returning(value interface{}, columns ...string) ISkuDo
-	UnderlyingDB() *gorm.DB
-	schema.Tabler
-}
-
-func (s skuDo) Debug() ISkuDo {
+func (s skuDo) Debug() *skuDo {
 	return s.withDO(s.DO.Debug())
 }
 
-func (s skuDo) WithContext(ctx context.Context) ISkuDo {
+func (s skuDo) WithContext(ctx context.Context) *skuDo {
 	return s.withDO(s.DO.WithContext(ctx))
 }
 
-func (s skuDo) ReadDB() ISkuDo {
+func (s skuDo) ReadDB() *skuDo {
 	return s.Clauses(dbresolver.Read)
 }
 
-func (s skuDo) WriteDB() ISkuDo {
+func (s skuDo) WriteDB() *skuDo {
 	return s.Clauses(dbresolver.Write)
 }
 
-func (s skuDo) Session(config *gorm.Session) ISkuDo {
+func (s skuDo) Session(config *gorm.Session) *skuDo {
 	return s.withDO(s.DO.Session(config))
 }
 
-func (s skuDo) Clauses(conds ...clause.Expression) ISkuDo {
+func (s skuDo) Clauses(conds ...clause.Expression) *skuDo {
 	return s.withDO(s.DO.Clauses(conds...))
 }
 
-func (s skuDo) Returning(value interface{}, columns ...string) ISkuDo {
+func (s skuDo) Returning(value interface{}, columns ...string) *skuDo {
 	return s.withDO(s.DO.Returning(value, columns...))
 }
 
-func (s skuDo) Not(conds ...gen.Condition) ISkuDo {
+func (s skuDo) Not(conds ...gen.Condition) *skuDo {
 	return s.withDO(s.DO.Not(conds...))
 }
 
-func (s skuDo) Or(conds ...gen.Condition) ISkuDo {
+func (s skuDo) Or(conds ...gen.Condition) *skuDo {
 	return s.withDO(s.DO.Or(conds...))
 }
 
-func (s skuDo) Select(conds ...field.Expr) ISkuDo {
+func (s skuDo) Select(conds ...field.Expr) *skuDo {
 	return s.withDO(s.DO.Select(conds...))
 }
 
-func (s skuDo) Where(conds ...gen.Condition) ISkuDo {
+func (s skuDo) Where(conds ...gen.Condition) *skuDo {
 	return s.withDO(s.DO.Where(conds...))
 }
 
-func (s skuDo) Order(conds ...field.Expr) ISkuDo {
+func (s skuDo) Order(conds ...field.Expr) *skuDo {
 	return s.withDO(s.DO.Order(conds...))
 }
 
-func (s skuDo) Distinct(cols ...field.Expr) ISkuDo {
+func (s skuDo) Distinct(cols ...field.Expr) *skuDo {
 	return s.withDO(s.DO.Distinct(cols...))
 }
 
-func (s skuDo) Omit(cols ...field.Expr) ISkuDo {
+func (s skuDo) Omit(cols ...field.Expr) *skuDo {
 	return s.withDO(s.DO.Omit(cols...))
 }
 
-func (s skuDo) Join(table schema.Tabler, on ...field.Expr) ISkuDo {
+func (s skuDo) Join(table schema.Tabler, on ...field.Expr) *skuDo {
 	return s.withDO(s.DO.Join(table, on...))
 }
 
-func (s skuDo) LeftJoin(table schema.Tabler, on ...field.Expr) ISkuDo {
+func (s skuDo) LeftJoin(table schema.Tabler, on ...field.Expr) *skuDo {
 	return s.withDO(s.DO.LeftJoin(table, on...))
 }
 
-func (s skuDo) RightJoin(table schema.Tabler, on ...field.Expr) ISkuDo {
+func (s skuDo) RightJoin(table schema.Tabler, on ...field.Expr) *skuDo {
 	return s.withDO(s.DO.RightJoin(table, on...))
 }
 
-func (s skuDo) Group(cols ...field.Expr) ISkuDo {
+func (s skuDo) Group(cols ...field.Expr) *skuDo {
 	return s.withDO(s.DO.Group(cols...))
 }
 
-func (s skuDo) Having(conds ...gen.Condition) ISkuDo {
+func (s skuDo) Having(conds ...gen.Condition) *skuDo {
 	return s.withDO(s.DO.Having(conds...))
 }
 
-func (s skuDo) Limit(limit int) ISkuDo {
+func (s skuDo) Limit(limit int) *skuDo {
 	return s.withDO(s.DO.Limit(limit))
 }
 
-func (s skuDo) Offset(offset int) ISkuDo {
+func (s skuDo) Offset(offset int) *skuDo {
 	return s.withDO(s.DO.Offset(offset))
 }
 
-func (s skuDo) Scopes(funcs ...func(gen.Dao) gen.Dao) ISkuDo {
+func (s skuDo) Scopes(funcs ...func(gen.Dao) gen.Dao) *skuDo {
 	return s.withDO(s.DO.Scopes(funcs...))
 }
 
-func (s skuDo) Unscoped() ISkuDo {
+func (s skuDo) Unscoped() *skuDo {
 	return s.withDO(s.DO.Unscoped())
 }
 
@@ -339,22 +278,22 @@ func (s skuDo) FindInBatches(result *[]*model.Sku, batchSize int, fc func(tx gen
 	return s.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (s skuDo) Attrs(attrs ...field.AssignExpr) ISkuDo {
+func (s skuDo) Attrs(attrs ...field.AssignExpr) *skuDo {
 	return s.withDO(s.DO.Attrs(attrs...))
 }
 
-func (s skuDo) Assign(attrs ...field.AssignExpr) ISkuDo {
+func (s skuDo) Assign(attrs ...field.AssignExpr) *skuDo {
 	return s.withDO(s.DO.Assign(attrs...))
 }
 
-func (s skuDo) Joins(fields ...field.RelationField) ISkuDo {
+func (s skuDo) Joins(fields ...field.RelationField) *skuDo {
 	for _, _f := range fields {
 		s = *s.withDO(s.DO.Joins(_f))
 	}
 	return &s
 }
 
-func (s skuDo) Preload(fields ...field.RelationField) ISkuDo {
+func (s skuDo) Preload(fields ...field.RelationField) *skuDo {
 	for _, _f := range fields {
 		s = *s.withDO(s.DO.Preload(_f))
 	}

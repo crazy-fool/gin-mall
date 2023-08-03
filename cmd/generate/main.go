@@ -3,6 +3,7 @@ package main
 import (
 	"gin-mall/pkg/db"
 	"gorm.io/gen"
+	"strings"
 )
 
 func main() {
@@ -12,18 +13,18 @@ func main() {
 	// specify the output directory (default: "./query")
 	// ### if you want to query without context constrain, set mode gen.WithoutContext ###
 	g := gen.NewGenerator(gen.Config{
-		OutPath: "./internal/dal/query",
-		Mode:    gen.WithQueryInterface,
+		OutPath: "./internal/gen/query",
+		Mode:    gen.WithDefaultQuery,
 		//if you want the nullable field generation property to be pointer type, set FieldNullable true
-		/* FieldNullable: true,*/
+		FieldNullable: true,
 		//if you want to assign field which has default value in `Create` API, set FieldCoverable true, reference: https://gorm.io/docs/create.html#Default-Values
 		/* FieldCoverable: true,*/
 		// if you want generate field with unsigned integer type, set FieldSignable true
 		/* FieldSignable: true,*/
 		//if you want to generate index tags from database, set FieldWithIndexTag true
-		/* FieldWithIndexTag: true,*/
+		FieldWithIndexTag: true,
 		//if you want to generate type tags from database, set FieldWithTypeTag true
-		/* FieldWithTypeTag: true,*/
+		FieldWithTypeTag: true,
 		//if you need unit tests for query code, set WithUnitTest true
 		/* WithUnitTest: true, */
 	})
@@ -38,6 +39,18 @@ func main() {
 	// 如果是想直接生成表的model和crud方法，则可以指定表的名称，例如g.GenerateModel("company")
 	// 想自定义某个表生成特性，比如struct的名称/字段类型/tag等，可以指定opt，例如g.GenerateModel("company",gen.FieldIgnore("address")), g.GenerateModelAs("people", "Person", gen.FieldIgnore("address"))
 	//g.ApplyBasic(model.Category{})
+
+	//g.WithJSONTagNameStrategy()
+
+	g.WithFileNameStrategy(func(tableName string) (fileName string) {
+		return strings.TrimPrefix(tableName, "hmh_")
+	})
+	g.WithModelNameStrategy(func(tableName string) (modelName string) {
+		tableName = strings.TrimPrefix(tableName, "hmh_")
+		tableName = strings.Replace(tableName, "_", " ", -1)
+		tableName = strings.Title(tableName)
+		return strings.Replace(tableName, " ", "", -1)
+	})
 
 	// apply diy interfaces on structs or table models
 	// 如果想给某些表或者model生成自定义方法，可以用ApplyInterface，第一个参数是方法接口，可以参考DIY部分文档定义

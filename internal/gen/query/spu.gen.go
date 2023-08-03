@@ -16,7 +16,7 @@ import (
 
 	"gorm.io/plugin/dbresolver"
 
-	"gin-mall/internal/dal/model"
+	"gin-mall/internal/gen/model"
 )
 
 func newSpu(db *gorm.DB, opts ...gen.DOOption) spu {
@@ -92,7 +92,7 @@ func (s *spu) updateTableName(table string) *spu {
 	return s
 }
 
-func (s *spu) WithContext(ctx context.Context) ISpuDo { return s.spuDo.WithContext(ctx) }
+func (s *spu) WithContext(ctx context.Context) *spuDo { return s.spuDo.WithContext(ctx) }
 
 func (s spu) TableName() string { return s.spuDo.TableName() }
 
@@ -136,156 +136,95 @@ func (s spu) replaceDB(db *gorm.DB) spu {
 
 type spuDo struct{ gen.DO }
 
-type ISpuDo interface {
-	gen.SubQuery
-	Debug() ISpuDo
-	WithContext(ctx context.Context) ISpuDo
-	WithResult(fc func(tx gen.Dao)) gen.ResultInfo
-	ReplaceDB(db *gorm.DB)
-	ReadDB() ISpuDo
-	WriteDB() ISpuDo
-	As(alias string) gen.Dao
-	Session(config *gorm.Session) ISpuDo
-	Columns(cols ...field.Expr) gen.Columns
-	Clauses(conds ...clause.Expression) ISpuDo
-	Not(conds ...gen.Condition) ISpuDo
-	Or(conds ...gen.Condition) ISpuDo
-	Select(conds ...field.Expr) ISpuDo
-	Where(conds ...gen.Condition) ISpuDo
-	Order(conds ...field.Expr) ISpuDo
-	Distinct(cols ...field.Expr) ISpuDo
-	Omit(cols ...field.Expr) ISpuDo
-	Join(table schema.Tabler, on ...field.Expr) ISpuDo
-	LeftJoin(table schema.Tabler, on ...field.Expr) ISpuDo
-	RightJoin(table schema.Tabler, on ...field.Expr) ISpuDo
-	Group(cols ...field.Expr) ISpuDo
-	Having(conds ...gen.Condition) ISpuDo
-	Limit(limit int) ISpuDo
-	Offset(offset int) ISpuDo
-	Count() (count int64, err error)
-	Scopes(funcs ...func(gen.Dao) gen.Dao) ISpuDo
-	Unscoped() ISpuDo
-	Create(values ...*model.Spu) error
-	CreateInBatches(values []*model.Spu, batchSize int) error
-	Save(values ...*model.Spu) error
-	First() (*model.Spu, error)
-	Take() (*model.Spu, error)
-	Last() (*model.Spu, error)
-	Find() ([]*model.Spu, error)
-	FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*model.Spu, err error)
-	FindInBatches(result *[]*model.Spu, batchSize int, fc func(tx gen.Dao, batch int) error) error
-	Pluck(column field.Expr, dest interface{}) error
-	Delete(...*model.Spu) (info gen.ResultInfo, err error)
-	Update(column field.Expr, value interface{}) (info gen.ResultInfo, err error)
-	UpdateSimple(columns ...field.AssignExpr) (info gen.ResultInfo, err error)
-	Updates(value interface{}) (info gen.ResultInfo, err error)
-	UpdateColumn(column field.Expr, value interface{}) (info gen.ResultInfo, err error)
-	UpdateColumnSimple(columns ...field.AssignExpr) (info gen.ResultInfo, err error)
-	UpdateColumns(value interface{}) (info gen.ResultInfo, err error)
-	UpdateFrom(q gen.SubQuery) gen.Dao
-	Attrs(attrs ...field.AssignExpr) ISpuDo
-	Assign(attrs ...field.AssignExpr) ISpuDo
-	Joins(fields ...field.RelationField) ISpuDo
-	Preload(fields ...field.RelationField) ISpuDo
-	FirstOrInit() (*model.Spu, error)
-	FirstOrCreate() (*model.Spu, error)
-	FindByPage(offset int, limit int) (result []*model.Spu, count int64, err error)
-	ScanByPage(result interface{}, offset int, limit int) (count int64, err error)
-	Scan(result interface{}) (err error)
-	Returning(value interface{}, columns ...string) ISpuDo
-	UnderlyingDB() *gorm.DB
-	schema.Tabler
-}
-
-func (s spuDo) Debug() ISpuDo {
+func (s spuDo) Debug() *spuDo {
 	return s.withDO(s.DO.Debug())
 }
 
-func (s spuDo) WithContext(ctx context.Context) ISpuDo {
+func (s spuDo) WithContext(ctx context.Context) *spuDo {
 	return s.withDO(s.DO.WithContext(ctx))
 }
 
-func (s spuDo) ReadDB() ISpuDo {
+func (s spuDo) ReadDB() *spuDo {
 	return s.Clauses(dbresolver.Read)
 }
 
-func (s spuDo) WriteDB() ISpuDo {
+func (s spuDo) WriteDB() *spuDo {
 	return s.Clauses(dbresolver.Write)
 }
 
-func (s spuDo) Session(config *gorm.Session) ISpuDo {
+func (s spuDo) Session(config *gorm.Session) *spuDo {
 	return s.withDO(s.DO.Session(config))
 }
 
-func (s spuDo) Clauses(conds ...clause.Expression) ISpuDo {
+func (s spuDo) Clauses(conds ...clause.Expression) *spuDo {
 	return s.withDO(s.DO.Clauses(conds...))
 }
 
-func (s spuDo) Returning(value interface{}, columns ...string) ISpuDo {
+func (s spuDo) Returning(value interface{}, columns ...string) *spuDo {
 	return s.withDO(s.DO.Returning(value, columns...))
 }
 
-func (s spuDo) Not(conds ...gen.Condition) ISpuDo {
+func (s spuDo) Not(conds ...gen.Condition) *spuDo {
 	return s.withDO(s.DO.Not(conds...))
 }
 
-func (s spuDo) Or(conds ...gen.Condition) ISpuDo {
+func (s spuDo) Or(conds ...gen.Condition) *spuDo {
 	return s.withDO(s.DO.Or(conds...))
 }
 
-func (s spuDo) Select(conds ...field.Expr) ISpuDo {
+func (s spuDo) Select(conds ...field.Expr) *spuDo {
 	return s.withDO(s.DO.Select(conds...))
 }
 
-func (s spuDo) Where(conds ...gen.Condition) ISpuDo {
+func (s spuDo) Where(conds ...gen.Condition) *spuDo {
 	return s.withDO(s.DO.Where(conds...))
 }
 
-func (s spuDo) Order(conds ...field.Expr) ISpuDo {
+func (s spuDo) Order(conds ...field.Expr) *spuDo {
 	return s.withDO(s.DO.Order(conds...))
 }
 
-func (s spuDo) Distinct(cols ...field.Expr) ISpuDo {
+func (s spuDo) Distinct(cols ...field.Expr) *spuDo {
 	return s.withDO(s.DO.Distinct(cols...))
 }
 
-func (s spuDo) Omit(cols ...field.Expr) ISpuDo {
+func (s spuDo) Omit(cols ...field.Expr) *spuDo {
 	return s.withDO(s.DO.Omit(cols...))
 }
 
-func (s spuDo) Join(table schema.Tabler, on ...field.Expr) ISpuDo {
+func (s spuDo) Join(table schema.Tabler, on ...field.Expr) *spuDo {
 	return s.withDO(s.DO.Join(table, on...))
 }
 
-func (s spuDo) LeftJoin(table schema.Tabler, on ...field.Expr) ISpuDo {
+func (s spuDo) LeftJoin(table schema.Tabler, on ...field.Expr) *spuDo {
 	return s.withDO(s.DO.LeftJoin(table, on...))
 }
 
-func (s spuDo) RightJoin(table schema.Tabler, on ...field.Expr) ISpuDo {
+func (s spuDo) RightJoin(table schema.Tabler, on ...field.Expr) *spuDo {
 	return s.withDO(s.DO.RightJoin(table, on...))
 }
 
-func (s spuDo) Group(cols ...field.Expr) ISpuDo {
+func (s spuDo) Group(cols ...field.Expr) *spuDo {
 	return s.withDO(s.DO.Group(cols...))
 }
 
-func (s spuDo) Having(conds ...gen.Condition) ISpuDo {
+func (s spuDo) Having(conds ...gen.Condition) *spuDo {
 	return s.withDO(s.DO.Having(conds...))
 }
 
-func (s spuDo) Limit(limit int) ISpuDo {
+func (s spuDo) Limit(limit int) *spuDo {
 	return s.withDO(s.DO.Limit(limit))
 }
 
-func (s spuDo) Offset(offset int) ISpuDo {
+func (s spuDo) Offset(offset int) *spuDo {
 	return s.withDO(s.DO.Offset(offset))
 }
 
-func (s spuDo) Scopes(funcs ...func(gen.Dao) gen.Dao) ISpuDo {
+func (s spuDo) Scopes(funcs ...func(gen.Dao) gen.Dao) *spuDo {
 	return s.withDO(s.DO.Scopes(funcs...))
 }
 
-func (s spuDo) Unscoped() ISpuDo {
+func (s spuDo) Unscoped() *spuDo {
 	return s.withDO(s.DO.Unscoped())
 }
 
@@ -351,22 +290,22 @@ func (s spuDo) FindInBatches(result *[]*model.Spu, batchSize int, fc func(tx gen
 	return s.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (s spuDo) Attrs(attrs ...field.AssignExpr) ISpuDo {
+func (s spuDo) Attrs(attrs ...field.AssignExpr) *spuDo {
 	return s.withDO(s.DO.Attrs(attrs...))
 }
 
-func (s spuDo) Assign(attrs ...field.AssignExpr) ISpuDo {
+func (s spuDo) Assign(attrs ...field.AssignExpr) *spuDo {
 	return s.withDO(s.DO.Assign(attrs...))
 }
 
-func (s spuDo) Joins(fields ...field.RelationField) ISpuDo {
+func (s spuDo) Joins(fields ...field.RelationField) *spuDo {
 	for _, _f := range fields {
 		s = *s.withDO(s.DO.Joins(_f))
 	}
 	return &s
 }
 
-func (s spuDo) Preload(fields ...field.RelationField) ISpuDo {
+func (s spuDo) Preload(fields ...field.RelationField) *spuDo {
 	for _, _f := range fields {
 		s = *s.withDO(s.DO.Preload(_f))
 	}

@@ -15,6 +15,28 @@ import (
 	"gorm.io/plugin/dbresolver"
 )
 
+var (
+	Q         = new(Query)
+	Category  *category
+	Customer  *customer
+	Sku       *sku
+	SkuStock  *skuStock
+	Spec      *spec
+	SpecGroup *specGroup
+	Spu       *spu
+)
+
+func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
+	*Q = *Use(db, opts...)
+	Category = &Q.Category
+	Customer = &Q.Customer
+	Sku = &Q.Sku
+	SkuStock = &Q.SkuStock
+	Spec = &Q.Spec
+	SpecGroup = &Q.SpecGroup
+	Spu = &Q.Spu
+}
+
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
 		db:        db,
@@ -77,13 +99,13 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 }
 
 type queryCtx struct {
-	Category  ICategoryDo
-	Customer  ICustomerDo
-	Sku       ISkuDo
-	SkuStock  ISkuStockDo
-	Spec      ISpecDo
-	SpecGroup ISpecGroupDo
-	Spu       ISpuDo
+	Category  *categoryDo
+	Customer  *customerDo
+	Sku       *skuDo
+	SkuStock  *skuStockDo
+	Spec      *specDo
+	SpecGroup *specGroupDo
+	Spu       *spuDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {

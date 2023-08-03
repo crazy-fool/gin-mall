@@ -16,7 +16,7 @@ import (
 
 	"gorm.io/plugin/dbresolver"
 
-	"gin-mall/internal/dal/model"
+	"gin-mall/internal/gen/model"
 )
 
 func newCategory(db *gorm.DB, opts ...gen.DOOption) category {
@@ -80,7 +80,7 @@ func (c *category) updateTableName(table string) *category {
 	return c
 }
 
-func (c *category) WithContext(ctx context.Context) ICategoryDo { return c.categoryDo.WithContext(ctx) }
+func (c *category) WithContext(ctx context.Context) *categoryDo { return c.categoryDo.WithContext(ctx) }
 
 func (c category) TableName() string { return c.categoryDo.TableName() }
 
@@ -120,156 +120,95 @@ func (c category) replaceDB(db *gorm.DB) category {
 
 type categoryDo struct{ gen.DO }
 
-type ICategoryDo interface {
-	gen.SubQuery
-	Debug() ICategoryDo
-	WithContext(ctx context.Context) ICategoryDo
-	WithResult(fc func(tx gen.Dao)) gen.ResultInfo
-	ReplaceDB(db *gorm.DB)
-	ReadDB() ICategoryDo
-	WriteDB() ICategoryDo
-	As(alias string) gen.Dao
-	Session(config *gorm.Session) ICategoryDo
-	Columns(cols ...field.Expr) gen.Columns
-	Clauses(conds ...clause.Expression) ICategoryDo
-	Not(conds ...gen.Condition) ICategoryDo
-	Or(conds ...gen.Condition) ICategoryDo
-	Select(conds ...field.Expr) ICategoryDo
-	Where(conds ...gen.Condition) ICategoryDo
-	Order(conds ...field.Expr) ICategoryDo
-	Distinct(cols ...field.Expr) ICategoryDo
-	Omit(cols ...field.Expr) ICategoryDo
-	Join(table schema.Tabler, on ...field.Expr) ICategoryDo
-	LeftJoin(table schema.Tabler, on ...field.Expr) ICategoryDo
-	RightJoin(table schema.Tabler, on ...field.Expr) ICategoryDo
-	Group(cols ...field.Expr) ICategoryDo
-	Having(conds ...gen.Condition) ICategoryDo
-	Limit(limit int) ICategoryDo
-	Offset(offset int) ICategoryDo
-	Count() (count int64, err error)
-	Scopes(funcs ...func(gen.Dao) gen.Dao) ICategoryDo
-	Unscoped() ICategoryDo
-	Create(values ...*model.Category) error
-	CreateInBatches(values []*model.Category, batchSize int) error
-	Save(values ...*model.Category) error
-	First() (*model.Category, error)
-	Take() (*model.Category, error)
-	Last() (*model.Category, error)
-	Find() ([]*model.Category, error)
-	FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*model.Category, err error)
-	FindInBatches(result *[]*model.Category, batchSize int, fc func(tx gen.Dao, batch int) error) error
-	Pluck(column field.Expr, dest interface{}) error
-	Delete(...*model.Category) (info gen.ResultInfo, err error)
-	Update(column field.Expr, value interface{}) (info gen.ResultInfo, err error)
-	UpdateSimple(columns ...field.AssignExpr) (info gen.ResultInfo, err error)
-	Updates(value interface{}) (info gen.ResultInfo, err error)
-	UpdateColumn(column field.Expr, value interface{}) (info gen.ResultInfo, err error)
-	UpdateColumnSimple(columns ...field.AssignExpr) (info gen.ResultInfo, err error)
-	UpdateColumns(value interface{}) (info gen.ResultInfo, err error)
-	UpdateFrom(q gen.SubQuery) gen.Dao
-	Attrs(attrs ...field.AssignExpr) ICategoryDo
-	Assign(attrs ...field.AssignExpr) ICategoryDo
-	Joins(fields ...field.RelationField) ICategoryDo
-	Preload(fields ...field.RelationField) ICategoryDo
-	FirstOrInit() (*model.Category, error)
-	FirstOrCreate() (*model.Category, error)
-	FindByPage(offset int, limit int) (result []*model.Category, count int64, err error)
-	ScanByPage(result interface{}, offset int, limit int) (count int64, err error)
-	Scan(result interface{}) (err error)
-	Returning(value interface{}, columns ...string) ICategoryDo
-	UnderlyingDB() *gorm.DB
-	schema.Tabler
-}
-
-func (c categoryDo) Debug() ICategoryDo {
+func (c categoryDo) Debug() *categoryDo {
 	return c.withDO(c.DO.Debug())
 }
 
-func (c categoryDo) WithContext(ctx context.Context) ICategoryDo {
+func (c categoryDo) WithContext(ctx context.Context) *categoryDo {
 	return c.withDO(c.DO.WithContext(ctx))
 }
 
-func (c categoryDo) ReadDB() ICategoryDo {
+func (c categoryDo) ReadDB() *categoryDo {
 	return c.Clauses(dbresolver.Read)
 }
 
-func (c categoryDo) WriteDB() ICategoryDo {
+func (c categoryDo) WriteDB() *categoryDo {
 	return c.Clauses(dbresolver.Write)
 }
 
-func (c categoryDo) Session(config *gorm.Session) ICategoryDo {
+func (c categoryDo) Session(config *gorm.Session) *categoryDo {
 	return c.withDO(c.DO.Session(config))
 }
 
-func (c categoryDo) Clauses(conds ...clause.Expression) ICategoryDo {
+func (c categoryDo) Clauses(conds ...clause.Expression) *categoryDo {
 	return c.withDO(c.DO.Clauses(conds...))
 }
 
-func (c categoryDo) Returning(value interface{}, columns ...string) ICategoryDo {
+func (c categoryDo) Returning(value interface{}, columns ...string) *categoryDo {
 	return c.withDO(c.DO.Returning(value, columns...))
 }
 
-func (c categoryDo) Not(conds ...gen.Condition) ICategoryDo {
+func (c categoryDo) Not(conds ...gen.Condition) *categoryDo {
 	return c.withDO(c.DO.Not(conds...))
 }
 
-func (c categoryDo) Or(conds ...gen.Condition) ICategoryDo {
+func (c categoryDo) Or(conds ...gen.Condition) *categoryDo {
 	return c.withDO(c.DO.Or(conds...))
 }
 
-func (c categoryDo) Select(conds ...field.Expr) ICategoryDo {
+func (c categoryDo) Select(conds ...field.Expr) *categoryDo {
 	return c.withDO(c.DO.Select(conds...))
 }
 
-func (c categoryDo) Where(conds ...gen.Condition) ICategoryDo {
+func (c categoryDo) Where(conds ...gen.Condition) *categoryDo {
 	return c.withDO(c.DO.Where(conds...))
 }
 
-func (c categoryDo) Order(conds ...field.Expr) ICategoryDo {
+func (c categoryDo) Order(conds ...field.Expr) *categoryDo {
 	return c.withDO(c.DO.Order(conds...))
 }
 
-func (c categoryDo) Distinct(cols ...field.Expr) ICategoryDo {
+func (c categoryDo) Distinct(cols ...field.Expr) *categoryDo {
 	return c.withDO(c.DO.Distinct(cols...))
 }
 
-func (c categoryDo) Omit(cols ...field.Expr) ICategoryDo {
+func (c categoryDo) Omit(cols ...field.Expr) *categoryDo {
 	return c.withDO(c.DO.Omit(cols...))
 }
 
-func (c categoryDo) Join(table schema.Tabler, on ...field.Expr) ICategoryDo {
+func (c categoryDo) Join(table schema.Tabler, on ...field.Expr) *categoryDo {
 	return c.withDO(c.DO.Join(table, on...))
 }
 
-func (c categoryDo) LeftJoin(table schema.Tabler, on ...field.Expr) ICategoryDo {
+func (c categoryDo) LeftJoin(table schema.Tabler, on ...field.Expr) *categoryDo {
 	return c.withDO(c.DO.LeftJoin(table, on...))
 }
 
-func (c categoryDo) RightJoin(table schema.Tabler, on ...field.Expr) ICategoryDo {
+func (c categoryDo) RightJoin(table schema.Tabler, on ...field.Expr) *categoryDo {
 	return c.withDO(c.DO.RightJoin(table, on...))
 }
 
-func (c categoryDo) Group(cols ...field.Expr) ICategoryDo {
+func (c categoryDo) Group(cols ...field.Expr) *categoryDo {
 	return c.withDO(c.DO.Group(cols...))
 }
 
-func (c categoryDo) Having(conds ...gen.Condition) ICategoryDo {
+func (c categoryDo) Having(conds ...gen.Condition) *categoryDo {
 	return c.withDO(c.DO.Having(conds...))
 }
 
-func (c categoryDo) Limit(limit int) ICategoryDo {
+func (c categoryDo) Limit(limit int) *categoryDo {
 	return c.withDO(c.DO.Limit(limit))
 }
 
-func (c categoryDo) Offset(offset int) ICategoryDo {
+func (c categoryDo) Offset(offset int) *categoryDo {
 	return c.withDO(c.DO.Offset(offset))
 }
 
-func (c categoryDo) Scopes(funcs ...func(gen.Dao) gen.Dao) ICategoryDo {
+func (c categoryDo) Scopes(funcs ...func(gen.Dao) gen.Dao) *categoryDo {
 	return c.withDO(c.DO.Scopes(funcs...))
 }
 
-func (c categoryDo) Unscoped() ICategoryDo {
+func (c categoryDo) Unscoped() *categoryDo {
 	return c.withDO(c.DO.Unscoped())
 }
 
@@ -335,22 +274,22 @@ func (c categoryDo) FindInBatches(result *[]*model.Category, batchSize int, fc f
 	return c.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (c categoryDo) Attrs(attrs ...field.AssignExpr) ICategoryDo {
+func (c categoryDo) Attrs(attrs ...field.AssignExpr) *categoryDo {
 	return c.withDO(c.DO.Attrs(attrs...))
 }
 
-func (c categoryDo) Assign(attrs ...field.AssignExpr) ICategoryDo {
+func (c categoryDo) Assign(attrs ...field.AssignExpr) *categoryDo {
 	return c.withDO(c.DO.Assign(attrs...))
 }
 
-func (c categoryDo) Joins(fields ...field.RelationField) ICategoryDo {
+func (c categoryDo) Joins(fields ...field.RelationField) *categoryDo {
 	for _, _f := range fields {
 		c = *c.withDO(c.DO.Joins(_f))
 	}
 	return &c
 }
 
-func (c categoryDo) Preload(fields ...field.RelationField) ICategoryDo {
+func (c categoryDo) Preload(fields ...field.RelationField) *categoryDo {
 	for _, _f := range fields {
 		c = *c.withDO(c.DO.Preload(_f))
 	}
