@@ -83,7 +83,7 @@ func (s *spec) updateTableName(table string) *spec {
 	return s
 }
 
-func (s *spec) WithContext(ctx context.Context) *specDo { return s.specDo.WithContext(ctx) }
+func (s *spec) WithContext(ctx context.Context) ISpecDo { return s.specDo.WithContext(ctx) }
 
 func (s spec) TableName() string { return s.specDo.TableName() }
 
@@ -124,95 +124,156 @@ func (s spec) replaceDB(db *gorm.DB) spec {
 
 type specDo struct{ gen.DO }
 
-func (s specDo) Debug() *specDo {
+type ISpecDo interface {
+	gen.SubQuery
+	Debug() ISpecDo
+	WithContext(ctx context.Context) ISpecDo
+	WithResult(fc func(tx gen.Dao)) gen.ResultInfo
+	ReplaceDB(db *gorm.DB)
+	ReadDB() ISpecDo
+	WriteDB() ISpecDo
+	As(alias string) gen.Dao
+	Session(config *gorm.Session) ISpecDo
+	Columns(cols ...field.Expr) gen.Columns
+	Clauses(conds ...clause.Expression) ISpecDo
+	Not(conds ...gen.Condition) ISpecDo
+	Or(conds ...gen.Condition) ISpecDo
+	Select(conds ...field.Expr) ISpecDo
+	Where(conds ...gen.Condition) ISpecDo
+	Order(conds ...field.Expr) ISpecDo
+	Distinct(cols ...field.Expr) ISpecDo
+	Omit(cols ...field.Expr) ISpecDo
+	Join(table schema.Tabler, on ...field.Expr) ISpecDo
+	LeftJoin(table schema.Tabler, on ...field.Expr) ISpecDo
+	RightJoin(table schema.Tabler, on ...field.Expr) ISpecDo
+	Group(cols ...field.Expr) ISpecDo
+	Having(conds ...gen.Condition) ISpecDo
+	Limit(limit int) ISpecDo
+	Offset(offset int) ISpecDo
+	Count() (count int64, err error)
+	Scopes(funcs ...func(gen.Dao) gen.Dao) ISpecDo
+	Unscoped() ISpecDo
+	Create(values ...*model.Spec) error
+	CreateInBatches(values []*model.Spec, batchSize int) error
+	Save(values ...*model.Spec) error
+	First() (*model.Spec, error)
+	Take() (*model.Spec, error)
+	Last() (*model.Spec, error)
+	Find() ([]*model.Spec, error)
+	FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*model.Spec, err error)
+	FindInBatches(result *[]*model.Spec, batchSize int, fc func(tx gen.Dao, batch int) error) error
+	Pluck(column field.Expr, dest interface{}) error
+	Delete(...*model.Spec) (info gen.ResultInfo, err error)
+	Update(column field.Expr, value interface{}) (info gen.ResultInfo, err error)
+	UpdateSimple(columns ...field.AssignExpr) (info gen.ResultInfo, err error)
+	Updates(value interface{}) (info gen.ResultInfo, err error)
+	UpdateColumn(column field.Expr, value interface{}) (info gen.ResultInfo, err error)
+	UpdateColumnSimple(columns ...field.AssignExpr) (info gen.ResultInfo, err error)
+	UpdateColumns(value interface{}) (info gen.ResultInfo, err error)
+	UpdateFrom(q gen.SubQuery) gen.Dao
+	Attrs(attrs ...field.AssignExpr) ISpecDo
+	Assign(attrs ...field.AssignExpr) ISpecDo
+	Joins(fields ...field.RelationField) ISpecDo
+	Preload(fields ...field.RelationField) ISpecDo
+	FirstOrInit() (*model.Spec, error)
+	FirstOrCreate() (*model.Spec, error)
+	FindByPage(offset int, limit int) (result []*model.Spec, count int64, err error)
+	ScanByPage(result interface{}, offset int, limit int) (count int64, err error)
+	Scan(result interface{}) (err error)
+	Returning(value interface{}, columns ...string) ISpecDo
+	UnderlyingDB() *gorm.DB
+	schema.Tabler
+}
+
+func (s specDo) Debug() ISpecDo {
 	return s.withDO(s.DO.Debug())
 }
 
-func (s specDo) WithContext(ctx context.Context) *specDo {
+func (s specDo) WithContext(ctx context.Context) ISpecDo {
 	return s.withDO(s.DO.WithContext(ctx))
 }
 
-func (s specDo) ReadDB() *specDo {
+func (s specDo) ReadDB() ISpecDo {
 	return s.Clauses(dbresolver.Read)
 }
 
-func (s specDo) WriteDB() *specDo {
+func (s specDo) WriteDB() ISpecDo {
 	return s.Clauses(dbresolver.Write)
 }
 
-func (s specDo) Session(config *gorm.Session) *specDo {
+func (s specDo) Session(config *gorm.Session) ISpecDo {
 	return s.withDO(s.DO.Session(config))
 }
 
-func (s specDo) Clauses(conds ...clause.Expression) *specDo {
+func (s specDo) Clauses(conds ...clause.Expression) ISpecDo {
 	return s.withDO(s.DO.Clauses(conds...))
 }
 
-func (s specDo) Returning(value interface{}, columns ...string) *specDo {
+func (s specDo) Returning(value interface{}, columns ...string) ISpecDo {
 	return s.withDO(s.DO.Returning(value, columns...))
 }
 
-func (s specDo) Not(conds ...gen.Condition) *specDo {
+func (s specDo) Not(conds ...gen.Condition) ISpecDo {
 	return s.withDO(s.DO.Not(conds...))
 }
 
-func (s specDo) Or(conds ...gen.Condition) *specDo {
+func (s specDo) Or(conds ...gen.Condition) ISpecDo {
 	return s.withDO(s.DO.Or(conds...))
 }
 
-func (s specDo) Select(conds ...field.Expr) *specDo {
+func (s specDo) Select(conds ...field.Expr) ISpecDo {
 	return s.withDO(s.DO.Select(conds...))
 }
 
-func (s specDo) Where(conds ...gen.Condition) *specDo {
+func (s specDo) Where(conds ...gen.Condition) ISpecDo {
 	return s.withDO(s.DO.Where(conds...))
 }
 
-func (s specDo) Order(conds ...field.Expr) *specDo {
+func (s specDo) Order(conds ...field.Expr) ISpecDo {
 	return s.withDO(s.DO.Order(conds...))
 }
 
-func (s specDo) Distinct(cols ...field.Expr) *specDo {
+func (s specDo) Distinct(cols ...field.Expr) ISpecDo {
 	return s.withDO(s.DO.Distinct(cols...))
 }
 
-func (s specDo) Omit(cols ...field.Expr) *specDo {
+func (s specDo) Omit(cols ...field.Expr) ISpecDo {
 	return s.withDO(s.DO.Omit(cols...))
 }
 
-func (s specDo) Join(table schema.Tabler, on ...field.Expr) *specDo {
+func (s specDo) Join(table schema.Tabler, on ...field.Expr) ISpecDo {
 	return s.withDO(s.DO.Join(table, on...))
 }
 
-func (s specDo) LeftJoin(table schema.Tabler, on ...field.Expr) *specDo {
+func (s specDo) LeftJoin(table schema.Tabler, on ...field.Expr) ISpecDo {
 	return s.withDO(s.DO.LeftJoin(table, on...))
 }
 
-func (s specDo) RightJoin(table schema.Tabler, on ...field.Expr) *specDo {
+func (s specDo) RightJoin(table schema.Tabler, on ...field.Expr) ISpecDo {
 	return s.withDO(s.DO.RightJoin(table, on...))
 }
 
-func (s specDo) Group(cols ...field.Expr) *specDo {
+func (s specDo) Group(cols ...field.Expr) ISpecDo {
 	return s.withDO(s.DO.Group(cols...))
 }
 
-func (s specDo) Having(conds ...gen.Condition) *specDo {
+func (s specDo) Having(conds ...gen.Condition) ISpecDo {
 	return s.withDO(s.DO.Having(conds...))
 }
 
-func (s specDo) Limit(limit int) *specDo {
+func (s specDo) Limit(limit int) ISpecDo {
 	return s.withDO(s.DO.Limit(limit))
 }
 
-func (s specDo) Offset(offset int) *specDo {
+func (s specDo) Offset(offset int) ISpecDo {
 	return s.withDO(s.DO.Offset(offset))
 }
 
-func (s specDo) Scopes(funcs ...func(gen.Dao) gen.Dao) *specDo {
+func (s specDo) Scopes(funcs ...func(gen.Dao) gen.Dao) ISpecDo {
 	return s.withDO(s.DO.Scopes(funcs...))
 }
 
-func (s specDo) Unscoped() *specDo {
+func (s specDo) Unscoped() ISpecDo {
 	return s.withDO(s.DO.Unscoped())
 }
 
@@ -278,22 +339,22 @@ func (s specDo) FindInBatches(result *[]*model.Spec, batchSize int, fc func(tx g
 	return s.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (s specDo) Attrs(attrs ...field.AssignExpr) *specDo {
+func (s specDo) Attrs(attrs ...field.AssignExpr) ISpecDo {
 	return s.withDO(s.DO.Attrs(attrs...))
 }
 
-func (s specDo) Assign(attrs ...field.AssignExpr) *specDo {
+func (s specDo) Assign(attrs ...field.AssignExpr) ISpecDo {
 	return s.withDO(s.DO.Assign(attrs...))
 }
 
-func (s specDo) Joins(fields ...field.RelationField) *specDo {
+func (s specDo) Joins(fields ...field.RelationField) ISpecDo {
 	for _, _f := range fields {
 		s = *s.withDO(s.DO.Joins(_f))
 	}
 	return &s
 }
 
-func (s specDo) Preload(fields ...field.RelationField) *specDo {
+func (s specDo) Preload(fields ...field.RelationField) ISpecDo {
 	for _, _f := range fields {
 		s = *s.withDO(s.DO.Preload(_f))
 	}

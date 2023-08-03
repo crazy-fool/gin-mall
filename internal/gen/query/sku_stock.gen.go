@@ -74,7 +74,7 @@ func (s *skuStock) updateTableName(table string) *skuStock {
 	return s
 }
 
-func (s *skuStock) WithContext(ctx context.Context) *skuStockDo { return s.skuStockDo.WithContext(ctx) }
+func (s *skuStock) WithContext(ctx context.Context) ISkuStockDo { return s.skuStockDo.WithContext(ctx) }
 
 func (s skuStock) TableName() string { return s.skuStockDo.TableName() }
 
@@ -112,95 +112,156 @@ func (s skuStock) replaceDB(db *gorm.DB) skuStock {
 
 type skuStockDo struct{ gen.DO }
 
-func (s skuStockDo) Debug() *skuStockDo {
+type ISkuStockDo interface {
+	gen.SubQuery
+	Debug() ISkuStockDo
+	WithContext(ctx context.Context) ISkuStockDo
+	WithResult(fc func(tx gen.Dao)) gen.ResultInfo
+	ReplaceDB(db *gorm.DB)
+	ReadDB() ISkuStockDo
+	WriteDB() ISkuStockDo
+	As(alias string) gen.Dao
+	Session(config *gorm.Session) ISkuStockDo
+	Columns(cols ...field.Expr) gen.Columns
+	Clauses(conds ...clause.Expression) ISkuStockDo
+	Not(conds ...gen.Condition) ISkuStockDo
+	Or(conds ...gen.Condition) ISkuStockDo
+	Select(conds ...field.Expr) ISkuStockDo
+	Where(conds ...gen.Condition) ISkuStockDo
+	Order(conds ...field.Expr) ISkuStockDo
+	Distinct(cols ...field.Expr) ISkuStockDo
+	Omit(cols ...field.Expr) ISkuStockDo
+	Join(table schema.Tabler, on ...field.Expr) ISkuStockDo
+	LeftJoin(table schema.Tabler, on ...field.Expr) ISkuStockDo
+	RightJoin(table schema.Tabler, on ...field.Expr) ISkuStockDo
+	Group(cols ...field.Expr) ISkuStockDo
+	Having(conds ...gen.Condition) ISkuStockDo
+	Limit(limit int) ISkuStockDo
+	Offset(offset int) ISkuStockDo
+	Count() (count int64, err error)
+	Scopes(funcs ...func(gen.Dao) gen.Dao) ISkuStockDo
+	Unscoped() ISkuStockDo
+	Create(values ...*model.SkuStock) error
+	CreateInBatches(values []*model.SkuStock, batchSize int) error
+	Save(values ...*model.SkuStock) error
+	First() (*model.SkuStock, error)
+	Take() (*model.SkuStock, error)
+	Last() (*model.SkuStock, error)
+	Find() ([]*model.SkuStock, error)
+	FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*model.SkuStock, err error)
+	FindInBatches(result *[]*model.SkuStock, batchSize int, fc func(tx gen.Dao, batch int) error) error
+	Pluck(column field.Expr, dest interface{}) error
+	Delete(...*model.SkuStock) (info gen.ResultInfo, err error)
+	Update(column field.Expr, value interface{}) (info gen.ResultInfo, err error)
+	UpdateSimple(columns ...field.AssignExpr) (info gen.ResultInfo, err error)
+	Updates(value interface{}) (info gen.ResultInfo, err error)
+	UpdateColumn(column field.Expr, value interface{}) (info gen.ResultInfo, err error)
+	UpdateColumnSimple(columns ...field.AssignExpr) (info gen.ResultInfo, err error)
+	UpdateColumns(value interface{}) (info gen.ResultInfo, err error)
+	UpdateFrom(q gen.SubQuery) gen.Dao
+	Attrs(attrs ...field.AssignExpr) ISkuStockDo
+	Assign(attrs ...field.AssignExpr) ISkuStockDo
+	Joins(fields ...field.RelationField) ISkuStockDo
+	Preload(fields ...field.RelationField) ISkuStockDo
+	FirstOrInit() (*model.SkuStock, error)
+	FirstOrCreate() (*model.SkuStock, error)
+	FindByPage(offset int, limit int) (result []*model.SkuStock, count int64, err error)
+	ScanByPage(result interface{}, offset int, limit int) (count int64, err error)
+	Scan(result interface{}) (err error)
+	Returning(value interface{}, columns ...string) ISkuStockDo
+	UnderlyingDB() *gorm.DB
+	schema.Tabler
+}
+
+func (s skuStockDo) Debug() ISkuStockDo {
 	return s.withDO(s.DO.Debug())
 }
 
-func (s skuStockDo) WithContext(ctx context.Context) *skuStockDo {
+func (s skuStockDo) WithContext(ctx context.Context) ISkuStockDo {
 	return s.withDO(s.DO.WithContext(ctx))
 }
 
-func (s skuStockDo) ReadDB() *skuStockDo {
+func (s skuStockDo) ReadDB() ISkuStockDo {
 	return s.Clauses(dbresolver.Read)
 }
 
-func (s skuStockDo) WriteDB() *skuStockDo {
+func (s skuStockDo) WriteDB() ISkuStockDo {
 	return s.Clauses(dbresolver.Write)
 }
 
-func (s skuStockDo) Session(config *gorm.Session) *skuStockDo {
+func (s skuStockDo) Session(config *gorm.Session) ISkuStockDo {
 	return s.withDO(s.DO.Session(config))
 }
 
-func (s skuStockDo) Clauses(conds ...clause.Expression) *skuStockDo {
+func (s skuStockDo) Clauses(conds ...clause.Expression) ISkuStockDo {
 	return s.withDO(s.DO.Clauses(conds...))
 }
 
-func (s skuStockDo) Returning(value interface{}, columns ...string) *skuStockDo {
+func (s skuStockDo) Returning(value interface{}, columns ...string) ISkuStockDo {
 	return s.withDO(s.DO.Returning(value, columns...))
 }
 
-func (s skuStockDo) Not(conds ...gen.Condition) *skuStockDo {
+func (s skuStockDo) Not(conds ...gen.Condition) ISkuStockDo {
 	return s.withDO(s.DO.Not(conds...))
 }
 
-func (s skuStockDo) Or(conds ...gen.Condition) *skuStockDo {
+func (s skuStockDo) Or(conds ...gen.Condition) ISkuStockDo {
 	return s.withDO(s.DO.Or(conds...))
 }
 
-func (s skuStockDo) Select(conds ...field.Expr) *skuStockDo {
+func (s skuStockDo) Select(conds ...field.Expr) ISkuStockDo {
 	return s.withDO(s.DO.Select(conds...))
 }
 
-func (s skuStockDo) Where(conds ...gen.Condition) *skuStockDo {
+func (s skuStockDo) Where(conds ...gen.Condition) ISkuStockDo {
 	return s.withDO(s.DO.Where(conds...))
 }
 
-func (s skuStockDo) Order(conds ...field.Expr) *skuStockDo {
+func (s skuStockDo) Order(conds ...field.Expr) ISkuStockDo {
 	return s.withDO(s.DO.Order(conds...))
 }
 
-func (s skuStockDo) Distinct(cols ...field.Expr) *skuStockDo {
+func (s skuStockDo) Distinct(cols ...field.Expr) ISkuStockDo {
 	return s.withDO(s.DO.Distinct(cols...))
 }
 
-func (s skuStockDo) Omit(cols ...field.Expr) *skuStockDo {
+func (s skuStockDo) Omit(cols ...field.Expr) ISkuStockDo {
 	return s.withDO(s.DO.Omit(cols...))
 }
 
-func (s skuStockDo) Join(table schema.Tabler, on ...field.Expr) *skuStockDo {
+func (s skuStockDo) Join(table schema.Tabler, on ...field.Expr) ISkuStockDo {
 	return s.withDO(s.DO.Join(table, on...))
 }
 
-func (s skuStockDo) LeftJoin(table schema.Tabler, on ...field.Expr) *skuStockDo {
+func (s skuStockDo) LeftJoin(table schema.Tabler, on ...field.Expr) ISkuStockDo {
 	return s.withDO(s.DO.LeftJoin(table, on...))
 }
 
-func (s skuStockDo) RightJoin(table schema.Tabler, on ...field.Expr) *skuStockDo {
+func (s skuStockDo) RightJoin(table schema.Tabler, on ...field.Expr) ISkuStockDo {
 	return s.withDO(s.DO.RightJoin(table, on...))
 }
 
-func (s skuStockDo) Group(cols ...field.Expr) *skuStockDo {
+func (s skuStockDo) Group(cols ...field.Expr) ISkuStockDo {
 	return s.withDO(s.DO.Group(cols...))
 }
 
-func (s skuStockDo) Having(conds ...gen.Condition) *skuStockDo {
+func (s skuStockDo) Having(conds ...gen.Condition) ISkuStockDo {
 	return s.withDO(s.DO.Having(conds...))
 }
 
-func (s skuStockDo) Limit(limit int) *skuStockDo {
+func (s skuStockDo) Limit(limit int) ISkuStockDo {
 	return s.withDO(s.DO.Limit(limit))
 }
 
-func (s skuStockDo) Offset(offset int) *skuStockDo {
+func (s skuStockDo) Offset(offset int) ISkuStockDo {
 	return s.withDO(s.DO.Offset(offset))
 }
 
-func (s skuStockDo) Scopes(funcs ...func(gen.Dao) gen.Dao) *skuStockDo {
+func (s skuStockDo) Scopes(funcs ...func(gen.Dao) gen.Dao) ISkuStockDo {
 	return s.withDO(s.DO.Scopes(funcs...))
 }
 
-func (s skuStockDo) Unscoped() *skuStockDo {
+func (s skuStockDo) Unscoped() ISkuStockDo {
 	return s.withDO(s.DO.Unscoped())
 }
 
@@ -266,22 +327,22 @@ func (s skuStockDo) FindInBatches(result *[]*model.SkuStock, batchSize int, fc f
 	return s.DO.FindInBatches(result, batchSize, fc)
 }
 
-func (s skuStockDo) Attrs(attrs ...field.AssignExpr) *skuStockDo {
+func (s skuStockDo) Attrs(attrs ...field.AssignExpr) ISkuStockDo {
 	return s.withDO(s.DO.Attrs(attrs...))
 }
 
-func (s skuStockDo) Assign(attrs ...field.AssignExpr) *skuStockDo {
+func (s skuStockDo) Assign(attrs ...field.AssignExpr) ISkuStockDo {
 	return s.withDO(s.DO.Assign(attrs...))
 }
 
-func (s skuStockDo) Joins(fields ...field.RelationField) *skuStockDo {
+func (s skuStockDo) Joins(fields ...field.RelationField) ISkuStockDo {
 	for _, _f := range fields {
 		s = *s.withDO(s.DO.Joins(_f))
 	}
 	return &s
 }
 
-func (s skuStockDo) Preload(fields ...field.RelationField) *skuStockDo {
+func (s skuStockDo) Preload(fields ...field.RelationField) ISkuStockDo {
 	for _, _f := range fields {
 		s = *s.withDO(s.DO.Preload(_f))
 	}

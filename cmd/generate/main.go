@@ -14,7 +14,7 @@ func main() {
 	// ### if you want to query without context constrain, set mode gen.WithoutContext ###
 	g := gen.NewGenerator(gen.Config{
 		OutPath: "./internal/gen/query",
-		Mode:    gen.WithDefaultQuery,
+		Mode:    gen.WithQueryInterface,
 		//if you want the nullable field generation property to be pointer type, set FieldNullable true
 		FieldNullable: true,
 		//if you want to assign field which has default value in `Create` API, set FieldCoverable true, reference: https://gorm.io/docs/create.html#Default-Values
