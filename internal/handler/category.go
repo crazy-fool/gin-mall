@@ -52,7 +52,7 @@ func (h *categoryHandler) List(ctx *gin.Context) {
 // OneList 一级分类列表
 func (h *categoryHandler) OneList(ctx *gin.Context) {
 	param := &params.CategoryListParam{
-		ParentId: new(uint),
+		ParentId: new(int32),
 	}
 	ret := service.GetCategoryService().GetList(ctx, param)
 	resp.HandleSuccess(ctx, ret)

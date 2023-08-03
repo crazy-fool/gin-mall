@@ -5,14 +5,15 @@ import (
 	"gin-mall/internal/gen/model"
 	"gin-mall/internal/gen/query"
 	"gin-mall/internal/params"
-	"github.com/pkg/errors"
-	"gorm.io/gorm"
+	"gin-mall/pkg/log"
+	"go.uber.org/zap"
 )
 
 type CategoryRepository interface {
 	GetById(ctx context.Context, id int32) (*model.Category, error)
 	SaveData(ctx context.Context, param *params.CategoryEditParam) (int32, error)
-	GetQuery(ctx context.Context, param *params.CategoryListParam) *gorm.DB
+	Page(ctx context.Context, param *params.CategoryListParam) (result []*model.Category, count int64, err error)
+	GetAll(ctx context.Context, param *params.CategoryListParam) (result []*model.Category, err error)
 }
 
 type categoryRepository struct {
@@ -23,40 +24,62 @@ func GetCategoryRepo() CategoryRepository {
 	return categoryRepo
 }
 
+// GetById 获取单条数据
 func (r *categoryRepository) GetById(ctx context.Context, id int32) (*model.Category, error) {
-	var category model.Category
-	if err := r.db.Find(&category, id).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
-		return nil, errors.Wrap(err, "failed to get user by username")
-	}
-
-	return &category, nil
+	t := query.Use(r.db).Category
+	return t.WithContext(ctx).Where(t.ID.Eq(id)).Take()
 }
 
+// Page 分页数据
+func (r *categoryRepository) Page(ctx context.Context, param *params.CategoryListParam) (result []*model.Category, count int64, err error) {
+	q := r.getQuery(ctx, param)
+	offset, pageSize := param.Offset()
+	return q.FindByPage(offset, pageSize)
+}
+
+// GetAll 获取所有数据不分页
+func (r *categoryRepository) GetAll(ctx context.Context, param *params.CategoryListParam) (result []*model.Category, err error) {
+	q := r.getQuery(ctx, param)
+	return q.Find()
+}
+
+// SaveData 指定字段保存数据，ID 0 新增，ID大于0更新
 func (r *categoryRepository) SaveData(ctx context.Context, param *params.CategoryEditParam) (int32, error) {
-	cate := &model.Category{
-		ID:   param.Id,
-		Name: param.Name,
-		Sort: *param.Sort,
+	cate := new(model.Category)
+	if param.Id > 0 {
+		c, err := r.GetById(ctx, param.Id)
+		if err != nil {
+			return 0, err
+		}
+		cate = c
 	}
-	m := query.Use(r.db).Category
-	if param.ParentId != nil {
-		cate.ParentID = *param.ParentId
-	}
+	t := query.Use(r.db).Category
 	if param.IsParent != nil {
 		cate.IsParent = *param.IsParent == 1
 	}
 
-	err := m.WithContext(ctx).Save(cate)
+	if param.Name != "" {
+		cate.Name = param.Name
+	}
+
+	if param.Sort != nil {
+		cate.Sort = *param.Sort
+	}
+
+	if param.ParentId != nil {
+		cate.ParentID = *param.ParentId
+	}
+
+	err := t.WithContext(ctx).Save(cate)
+	log.GetLog().Debug("[商品分类]保存数据", zap.Any("保存后数据", cate))
 	return cate.ID, err
 }
 
-func (r *categoryRepository) GetQuery(ctx context.Context, param *params.CategoryListParam) *gorm.DB {
-	query := r.db.Model(model.Category{})
+func (r *categoryRepository) getQuery(ctx context.Context, param *params.CategoryListParam) query.ICategoryDo {
+	t := query.Use(r.db).Category
+	q := t.WithContext(ctx)
 	if param.ParentId != nil {
-		query.Where("parent_id = ?", *param.ParentId)
+		q.Where(t.ParentID.Eq(*param.ParentId))
 	}
-	return query.Order("sort desc")
+	return q.Order(t.Sort)
 }
