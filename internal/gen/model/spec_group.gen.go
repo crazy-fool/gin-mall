@@ -12,8 +12,8 @@ const TableNameSpecGroup = "hmh_spec_group"
 
 // SpecGroup mapped from table <hmh_spec_group>
 type SpecGroup struct {
-	ID         int       `gorm:"column:id;type:int(11);primaryKey;autoIncrement:true" json:"id"`
-	CategoryID int       `gorm:"column:category_id;type:int(11);not null;comment:商品分类id" json:"category_id"` // 商品分类id
+	ID         int32     `gorm:"column:id;type:int(11);primaryKey;autoIncrement:true" json:"id"`
+	CategoryID int32     `gorm:"column:category_id;type:int(11);not null;comment:商品分类id" json:"category_id"` // 商品分类id
 	Name       string    `gorm:"column:name;type:varchar(20);comment:规格组名称" json:"name"`                     // 规格组名称
 	CreatedAt  time.Time `gorm:"column:created_at;type:datetime" json:"created_at"`
 	UpdatedAt  time.Time `gorm:"column:updated_at;type:datetime" json:"updated_at"`

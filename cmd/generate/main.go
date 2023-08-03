@@ -10,7 +10,7 @@ import (
 // dataMap mapping relationship
 var dataMap = map[string]func(gorm.ColumnType) (dataType string){
 	// int mapping
-	"int": func(columnType gorm.ColumnType) (dataType string) { return "int" },
+	"int": func(columnType gorm.ColumnType) (dataType string) { return "int32" },
 
 	// bool mapping
 	"tinyint": func(columnType gorm.ColumnType) (dataType string) {

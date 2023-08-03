@@ -27,8 +27,8 @@ func newSpecGroup(db *gorm.DB, opts ...gen.DOOption) specGroup {
 
 	tableName := _specGroup.specGroupDo.TableName()
 	_specGroup.ALL = field.NewAsterisk(tableName)
-	_specGroup.ID = field.NewInt(tableName, "id")
-	_specGroup.CategoryID = field.NewInt(tableName, "category_id")
+	_specGroup.ID = field.NewInt32(tableName, "id")
+	_specGroup.CategoryID = field.NewInt32(tableName, "category_id")
 	_specGroup.Name = field.NewString(tableName, "name")
 	_specGroup.CreatedAt = field.NewTime(tableName, "created_at")
 	_specGroup.UpdatedAt = field.NewTime(tableName, "updated_at")
@@ -42,8 +42,8 @@ type specGroup struct {
 	specGroupDo specGroupDo
 
 	ALL        field.Asterisk
-	ID         field.Int
-	CategoryID field.Int    // 商品分类id
+	ID         field.Int32
+	CategoryID field.Int32  // 商品分类id
 	Name       field.String // 规格组名称
 	CreatedAt  field.Time
 	UpdatedAt  field.Time
@@ -63,8 +63,8 @@ func (s specGroup) As(alias string) *specGroup {
 
 func (s *specGroup) updateTableName(table string) *specGroup {
 	s.ALL = field.NewAsterisk(table)
-	s.ID = field.NewInt(table, "id")
-	s.CategoryID = field.NewInt(table, "category_id")
+	s.ID = field.NewInt32(table, "id")
+	s.CategoryID = field.NewInt32(table, "category_id")
 	s.Name = field.NewString(table, "name")
 	s.CreatedAt = field.NewTime(table, "created_at")
 	s.UpdatedAt = field.NewTime(table, "updated_at")

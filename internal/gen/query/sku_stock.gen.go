@@ -27,9 +27,9 @@ func newSkuStock(db *gorm.DB, opts ...gen.DOOption) skuStock {
 
 	tableName := _skuStock.skuStockDo.TableName()
 	_skuStock.ALL = field.NewAsterisk(tableName)
-	_skuStock.ID = field.NewInt(tableName, "id")
+	_skuStock.ID = field.NewInt32(tableName, "id")
 	_skuStock.Sku = field.NewString(tableName, "sku")
-	_skuStock.Stock = field.NewInt(tableName, "stock")
+	_skuStock.Stock = field.NewInt32(tableName, "stock")
 	_skuStock.CreatedAt = field.NewTime(tableName, "created_at")
 	_skuStock.UpdatedAt = field.NewTime(tableName, "updated_at")
 
@@ -42,9 +42,9 @@ type skuStock struct {
 	skuStockDo skuStockDo
 
 	ALL       field.Asterisk
-	ID        field.Int
+	ID        field.Int32
 	Sku       field.String
-	Stock     field.Int
+	Stock     field.Int32
 	CreatedAt field.Time
 	UpdatedAt field.Time
 
@@ -63,9 +63,9 @@ func (s skuStock) As(alias string) *skuStock {
 
 func (s *skuStock) updateTableName(table string) *skuStock {
 	s.ALL = field.NewAsterisk(table)
-	s.ID = field.NewInt(table, "id")
+	s.ID = field.NewInt32(table, "id")
 	s.Sku = field.NewString(table, "sku")
-	s.Stock = field.NewInt(table, "stock")
+	s.Stock = field.NewInt32(table, "stock")
 	s.CreatedAt = field.NewTime(table, "created_at")
 	s.UpdatedAt = field.NewTime(table, "updated_at")
 

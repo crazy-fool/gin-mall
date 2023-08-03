@@ -12,7 +12,7 @@ const TableNameSku = "hmh_sku"
 
 // Sku mapped from table <hmh_sku>
 type Sku struct {
-	ID          int       `gorm:"column:id;type:int(11);primaryKey;autoIncrement:true" json:"id"`
+	ID          int32     `gorm:"column:id;type:int(11);primaryKey;autoIncrement:true" json:"id"`
 	Name        string    `gorm:"column:name;type:varchar(30);not null;comment:skuname" json:"name"`                            // skuname
 	Sku         string    `gorm:"column:sku;type:varchar(20);not null;comment:sku" json:"sku"`                                  // sku
 	Price       float64   `gorm:"column:price;type:decimal(10,2);not null;default:0.00;comment:售价" json:"price"`                // 售价

@@ -14,7 +14,7 @@ const TableNameCustomer = "hmh_customer"
 
 // Customer mapped from table <hmh_customer>
 type Customer struct {
-	ID          int            `gorm:"column:id;type:int(11);primaryKey;autoIncrement:true" json:"id"`
+	ID          int32          `gorm:"column:id;type:int(11);primaryKey;autoIncrement:true" json:"id"`
 	Code        string         `gorm:"column:code;type:varchar(50);not null;uniqueIndex:un_code,priority:1;comment:code" json:"code"`        // code
 	Name        string         `gorm:"column:name;type:varchar(50);comment:姓名" json:"name"`                                                  // 姓名
 	Account     string         `gorm:"column:account;type:varchar(20);not null;uniqueIndex:un_account,priority:1;comment:账号" json:"account"` // 账号

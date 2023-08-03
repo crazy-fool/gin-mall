@@ -27,9 +27,9 @@ func newSpec(db *gorm.DB, opts ...gen.DOOption) spec {
 
 	tableName := _spec.specDo.TableName()
 	_spec.ALL = field.NewAsterisk(tableName)
-	_spec.ID = field.NewInt(tableName, "id")
-	_spec.CategoryID = field.NewInt(tableName, "category_id")
-	_spec.GroupID = field.NewInt(tableName, "group_id")
+	_spec.ID = field.NewInt32(tableName, "id")
+	_spec.CategoryID = field.NewInt32(tableName, "category_id")
+	_spec.GroupID = field.NewInt32(tableName, "group_id")
 	_spec.Name = field.NewString(tableName, "name")
 	_spec.IsGenerate = field.NewBool(tableName, "is_generate")
 	_spec.Searching = field.NewBool(tableName, "searching")
@@ -45,9 +45,9 @@ type spec struct {
 	specDo specDo
 
 	ALL        field.Asterisk
-	ID         field.Int
-	CategoryID field.Int    // 商品分类id
-	GroupID    field.Int    // 分组id
+	ID         field.Int32
+	CategoryID field.Int32  // 商品分类id
+	GroupID    field.Int32  // 分组id
 	Name       field.String // 参数名称
 	IsGenerate field.Bool   // 是否通用
 	Searching  field.Bool   // 是否用于搜索
@@ -69,9 +69,9 @@ func (s spec) As(alias string) *spec {
 
 func (s *spec) updateTableName(table string) *spec {
 	s.ALL = field.NewAsterisk(table)
-	s.ID = field.NewInt(table, "id")
-	s.CategoryID = field.NewInt(table, "category_id")
-	s.GroupID = field.NewInt(table, "group_id")
+	s.ID = field.NewInt32(table, "id")
+	s.CategoryID = field.NewInt32(table, "category_id")
+	s.GroupID = field.NewInt32(table, "group_id")
 	s.Name = field.NewString(table, "name")
 	s.IsGenerate = field.NewBool(table, "is_generate")
 	s.Searching = field.NewBool(table, "searching")
