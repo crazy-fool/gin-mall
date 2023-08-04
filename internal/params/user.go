@@ -5,6 +5,7 @@ type RegisterParam struct {
 	Password string `json:"password" binding:"required"`
 	Account  string `json:"account" binding:"required"`
 	Mobile   string `json:"mobile" binding:"required"`
+	Id       int32  `json:"id"`
 }
 
 type LoginParam struct {

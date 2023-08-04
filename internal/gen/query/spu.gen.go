@@ -36,6 +36,9 @@ func newSpu(db *gorm.DB, opts ...gen.DOOption) spu {
 	_spu.StoreBn = field.NewString(tableName, "store_bn")
 	_spu.SaleCnt = field.NewInt32(tableName, "sale_cnt")
 	_spu.PriceRange = field.NewString(tableName, "price_range")
+	_spu.CateID = field.NewInt32(tableName, "cate_id")
+	_spu.OneCateID = field.NewInt32(tableName, "one_cate_id")
+	_spu.TwoCateID = field.NewInt32(tableName, "two_cate_id")
 	_spu.CreatedAt = field.NewTime(tableName, "created_at")
 	_spu.UpdatedAt = field.NewTime(tableName, "updated_at")
 
@@ -57,6 +60,9 @@ type spu struct {
 	StoreBn    field.String // 商户号
 	SaleCnt    field.Int32  // 销量
 	PriceRange field.String // 价格区间
+	CateID     field.Int32  // 子分类id
+	OneCateID  field.Int32  // 一级分类id
+	TwoCateID  field.Int32  // 二级分类id
 	CreatedAt  field.Time   // 创建时间
 	UpdatedAt  field.Time   // 更新时间
 
@@ -84,6 +90,9 @@ func (s *spu) updateTableName(table string) *spu {
 	s.StoreBn = field.NewString(table, "store_bn")
 	s.SaleCnt = field.NewInt32(table, "sale_cnt")
 	s.PriceRange = field.NewString(table, "price_range")
+	s.CateID = field.NewInt32(table, "cate_id")
+	s.OneCateID = field.NewInt32(table, "one_cate_id")
+	s.TwoCateID = field.NewInt32(table, "two_cate_id")
 	s.CreatedAt = field.NewTime(table, "created_at")
 	s.UpdatedAt = field.NewTime(table, "updated_at")
 
@@ -110,7 +119,7 @@ func (s *spu) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (s *spu) fillFieldMap() {
-	s.fieldMap = make(map[string]field.Expr, 11)
+	s.fieldMap = make(map[string]field.Expr, 14)
 	s.fieldMap["id"] = s.ID
 	s.fieldMap["spu"] = s.Spu
 	s.fieldMap["name"] = s.Name
@@ -120,6 +129,9 @@ func (s *spu) fillFieldMap() {
 	s.fieldMap["store_bn"] = s.StoreBn
 	s.fieldMap["sale_cnt"] = s.SaleCnt
 	s.fieldMap["price_range"] = s.PriceRange
+	s.fieldMap["cate_id"] = s.CateID
+	s.fieldMap["one_cate_id"] = s.OneCateID
+	s.fieldMap["two_cate_id"] = s.TwoCateID
 	s.fieldMap["created_at"] = s.CreatedAt
 	s.fieldMap["updated_at"] = s.UpdatedAt
 }

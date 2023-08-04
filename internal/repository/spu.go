@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"gin-mall/internal/model"
+	"gin-mall/internal/gen/model"
 	"github.com/pkg/errors"
 )
 

@@ -36,10 +36,10 @@ func NewServerHTTP() *gin.Engine {
 
 	}
 	// Non-strict permission routing group
-	noStrictAuthRouter := rootGroup.Group("/").Use(auth.NoStrictAuth())
-	{
-		noStrictAuthRouter.GET("/user", userHandler.GetProfile)
-	}
+	//noStrictAuthRouter := rootGroup.Group("/").Use(auth.NoStrictAuth())
+	//{
+	//	//noStrictAuthRouter.GET("/user", userHandler.GetProfile)
+	//}
 
 	categoryHandler := handler.GetCategoryHandler()
 	// Strict permission routing group

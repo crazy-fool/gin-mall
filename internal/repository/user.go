@@ -2,15 +2,16 @@ package repository
 
 import (
 	"context"
-	"gin-mall/internal/model"
-	"github.com/pkg/errors"
-	"gorm.io/gorm"
+	"gin-mall/internal/gen/model"
+	"gin-mall/internal/gen/query"
+	"gin-mall/internal/params"
+	"gin-mall/pkg/helper/sid"
 )
 
 type UserRepository interface {
-	Create(ctx context.Context, user *model.Customer) error
-	Update(ctx context.Context, user *model.Customer) error
-	GetByID(ctx context.Context, id string) (*model.Customer, error)
+	SaveData(ctx context.Context, param *params.RegisterParam) (int32, error)
+	GetByUid(ctx context.Context, uid string) (*model.Customer, error)
+	GetByID(ctx context.Context, id int32) (*model.Customer, error)
 	GetByAccount(ctx context.Context, account string) (*model.Customer, error)
 }
 
@@ -22,43 +23,57 @@ func GetUserRepo() UserRepository {
 	return userRepo
 }
 
-func (r *userRepository) SaveData(ctx context.Context) {
-
+func (r *userRepository) GetByUid(ctx context.Context, uid string) (*model.Customer, error) {
+	t := query.Use(r.db).Customer
+	return t.WithContext(ctx).Where(t.Code.Eq(uid)).Take()
 }
 
-func (r *userRepository) Create(ctx context.Context, user *model.Customer) error {
-	if err := r.db.Create(user).Error; err != nil {
-		return errors.Wrap(err, "failed to create user")
-	}
-	return nil
-}
-
-func (r *userRepository) Update(ctx context.Context, user *model.Customer) error {
-	if err := r.db.Save(user).Error; err != nil {
-		return errors.Wrap(err, "failed to update user")
-	}
-
-	return nil
-}
-
-func (r *userRepository) GetByID(ctx context.Context, userId string) (*model.Customer, error) {
-	var user model.Customer
-	if err := r.db.Where("user_id = ?", userId).First(&user).Error; err != nil {
-
-		return nil, errors.Wrap(err, "failed to get user by ID")
-	}
-
-	return &user, nil
+func (r *userRepository) GetByID(ctx context.Context, id int32) (*model.Customer, error) {
+	t := query.Use(r.db).Customer
+	return t.WithContext(ctx).Where(t.ID.Eq(id)).Take()
 }
 
 func (r *userRepository) GetByAccount(ctx context.Context, account string) (*model.Customer, error) {
-	var customer model.Customer
-	if err := r.db.Where("account = ?", account).First(&customer).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
+	t := query.Use(r.db).Customer
+	return t.WithContext(ctx).Where(t.Account.Eq(account)).Take()
+}
+
+func (r *userRepository) SaveData(ctx context.Context, param *params.RegisterParam) (int32, error) {
+	customer := new(model.Customer)
+	if param.Id > 0 {
+		c, err := r.GetByID(ctx, param.Id)
+		if err != nil {
+			return 0, err
 		}
-		return nil, errors.Wrap(err, "failed to get user by username")
+		customer = c
+	}
+	t := query.Use(r.db).Customer
+	if param.Name != "" {
+		customer.Name = param.Name
 	}
 
-	return &customer, nil
+	if param.Password != "" {
+		customer.Password = param.Password
+	}
+
+	if param.Account != "" {
+		customer.Account = param.Account
+	}
+
+	if param.Mobile != "" {
+		customer.Mobile = param.Mobile
+	}
+
+	if customer.Code == "" {
+		// Generate user ID
+		code, err := sid.GetSid().GenString()
+		if err != nil {
+			return 0, err
+		}
+		customer.Code = code
+	}
+
+	err := t.WithContext(ctx).Save(customer)
+	r.recordError("customer保存数据", err)
+	return customer.ID, err
 }

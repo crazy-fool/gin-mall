@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"gin-mall/internal/model"
+	"gin-mall/internal/gen/model"
 	"gin-mall/internal/params"
 )
 

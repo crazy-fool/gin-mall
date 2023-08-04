@@ -11,8 +11,6 @@ import (
 type UserHandler interface {
 	Register(ctx *gin.Context)
 	Login(ctx *gin.Context)
-	GetProfile(ctx *gin.Context)
-	UpdateProfile(ctx *gin.Context)
 }
 
 type userHandler struct {
@@ -54,37 +52,4 @@ func (h *userHandler) Login(ctx *gin.Context) {
 	resp.HandleSuccess(ctx, gin.H{
 		"token": token,
 	})
-}
-
-func (h *userHandler) GetProfile(ctx *gin.Context) {
-	userId := GetUserIdFromCtx(ctx)
-	if userId == "" {
-		resp.ResponseError(ctx, resp.CustomerNotLogin)
-		return
-	}
-
-	user, err := service.GetUserService().GetProfile(ctx, userId)
-	if err != nil {
-		resp.ResponseError(ctx, resp.ResourceNotFound)
-		return
-	}
-
-	resp.HandleSuccess(ctx, user)
-}
-
-func (h *userHandler) UpdateProfile(ctx *gin.Context) {
-	userId := GetUserIdFromCtx(ctx)
-
-	var req params.UpdateProfileParam
-	if err := ctx.ShouldBindJSON(&req); err != nil {
-		resp.ResponseErrorWithMsg(ctx, resp.ParamError, err.Error())
-		return
-	}
-
-	if err := service.GetUserService().UpdateProfile(ctx, userId, &req); err != nil {
-		resp.ResponseErrorWithMsg(ctx, resp.OpFailed, err.Error())
-		return
-	}
-
-	resp.HandleSuccess(ctx, nil)
 }
