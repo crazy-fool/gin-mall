@@ -81,7 +81,20 @@ CREATE TABLE `hmh_spu` (
     `store_bn` varchar(20) COLLATE utf8mb4_general_ci DEFAULT '' COMMENT '商户号',
     `sale_cnt` int(11) DEFAULT '0' COMMENT '销量',
     `price_range` varchar(255) COLLATE utf8mb4_general_ci DEFAULT '' COMMENT '价格区间',
+    `cate_id` int(11) DEFAULT '0' COMMENT '子分类id',
+    `one_cate_id` int(11) DEFAULT '0' COMMENT '一级分类id',
+    `two_cate_id` int(11) DEFAULT '0' COMMENT '二级分类id',
     `created_at` datetime DEFAULT NULL COMMENT '创建时间',
     `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `hmh_sku_detail` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `hmh_spu_detail` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
