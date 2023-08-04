@@ -32,9 +32,7 @@ func (r *categoryRepository) GetById(ctx context.Context, id int32) (*model.Cate
 
 // Page 分页数据
 func (r *categoryRepository) Page(ctx context.Context, param *params.CategoryListParam) (result []*model.Category, count int64, err error) {
-	q := r.getQuery(ctx, param)
-	offset, pageSize := param.Offset()
-	return q.FindByPage(offset, pageSize)
+	return r.getQuery(ctx, param).FindByPage(param.OffsetLimit())
 }
 
 // GetAll 获取所有数据不分页
