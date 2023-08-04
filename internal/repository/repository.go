@@ -4,6 +4,7 @@ import (
 	"gin-mall/pkg/db"
 	"gin-mall/pkg/log"
 	"github.com/redis/go-redis/v9"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -12,11 +13,11 @@ func init() {
 }
 
 func newRepo() {
-	log.GetLog().Info("===========初始化repository============")
 	repo = &Repository{
 		db:  db.GetDB(),
 		rdb: db.GetRedisClient(),
 	}
+	log.GetLog().Info("===========初始化repository============")
 	userRepo = &userRepository{Repository: repo}
 	spuRepo = &spuRepository{Repository: repo}
 	categoryRepo = &categoryRepository{Repository: repo}
@@ -28,7 +29,12 @@ var spuRepo *spuRepository
 var categoryRepo *categoryRepository
 
 type Repository struct {
-	db     *gorm.DB
-	rdb    *redis.Client
-	logger *log.Logger
+	db  *gorm.DB
+	rdb *redis.Client
+}
+
+func (r Repository) recordError(msg string, err error) {
+	if err != nil {
+		log.GetLog().Error("[数据库操作error]"+msg, zap.Error(err))
+	}
 }

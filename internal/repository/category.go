@@ -5,8 +5,6 @@ import (
 	"gin-mall/internal/gen/model"
 	"gin-mall/internal/gen/query"
 	"gin-mall/internal/params"
-	"gin-mall/pkg/log"
-	"go.uber.org/zap"
 )
 
 type CategoryRepository interface {
@@ -69,7 +67,7 @@ func (r *categoryRepository) SaveData(ctx context.Context, param *params.Categor
 	}
 
 	err := t.WithContext(ctx).Save(cate)
-	log.GetLog().Debug("[商品分类]保存数据", zap.Any("保存后数据", cate))
+	r.recordError("商品分类保存数据", err)
 	return cate.ID, err
 }
 
