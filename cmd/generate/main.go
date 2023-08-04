@@ -20,6 +20,8 @@ var dataMap = map[string]func(gorm.ColumnType) (dataType string){
 		}
 		return "byte"
 	},
+	//"datetime": func(columnType gorm.ColumnType) (dataType string) {
+	//},
 }
 
 func main() {
