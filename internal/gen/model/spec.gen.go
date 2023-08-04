@@ -12,14 +12,14 @@ const TableNameSpec = "hmh_spec"
 
 // Spec mapped from table <hmh_spec>
 type Spec struct {
-	ID         int32     `gorm:"column:id;type:int(11);primaryKey;autoIncrement:true" json:"id"`
-	CategoryID int32     `gorm:"column:category_id;type:int(11);comment:商品分类id" json:"category_id"`            // 商品分类id
-	GroupID    int32     `gorm:"column:group_id;type:int(11);comment:分组id" json:"group_id"`                    // 分组id
-	Name       string    `gorm:"column:name;type:varchar(20);comment:参数名称" json:"name"`                        // 参数名称
-	IsGenerate bool      `gorm:"column:is_generate;type:tinyint(1);default:1;comment:是否通用" json:"is_generate"` // 是否通用
-	Searching  bool      `gorm:"column:searching;type:tinyint(1);comment:是否用于搜索" json:"searching"`             // 是否用于搜索
-	CreatedAt  time.Time `gorm:"column:created_at;type:datetime" json:"created_at"`
-	UpdatedAt  time.Time `gorm:"column:updated_at;type:datetime" json:"updated_at"`
+	ID         int32      `gorm:"column:id;type:int(11);primaryKey;autoIncrement:true" json:"id"`
+	CategoryID *int32     `gorm:"column:category_id;type:int(11);comment:商品分类id" json:"category_id"`            // 商品分类id
+	GroupID    *int32     `gorm:"column:group_id;type:int(11);comment:分组id" json:"group_id"`                    // 分组id
+	Name       *string    `gorm:"column:name;type:varchar(20);comment:参数名称" json:"name"`                        // 参数名称
+	IsGenerate *bool      `gorm:"column:is_generate;type:tinyint(1);default:1;comment:是否通用" json:"is_generate"` // 是否通用
+	Searching  *bool      `gorm:"column:searching;type:tinyint(1);comment:是否用于搜索" json:"searching"`             // 是否用于搜索
+	CreatedAt  *time.Time `gorm:"column:created_at;type:datetime" json:"created_at"`
+	UpdatedAt  *time.Time `gorm:"column:updated_at;type:datetime" json:"updated_at"`
 }
 
 // TableName Spec's table name

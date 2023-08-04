@@ -34,9 +34,9 @@ func main() {
 		OutPath: "./internal/gen/query",
 		Mode:    gen.WithQueryInterface,
 		//if you want the nullable field generation property to be pointer type, set FieldNullable true
-		//FieldNullable: true,
+		FieldNullable: true,
 		//if you want to assign field which has default value in `Create` API, set FieldCoverable true, reference: https://gorm.io/docs/create.html#Default-Values
-		/* FieldCoverable: true,*/
+		//FieldCoverable: true,
 		// if you want generate field with unsigned integer type, set FieldSignable true
 		/* FieldSignable: true,*/
 		//if you want to generate index tags from database, set FieldWithIndexTag true

@@ -12,13 +12,13 @@ const TableNameCategory = "hmh_category"
 
 // Category mapped from table <hmh_category>
 type Category struct {
-	ID        int32     `gorm:"column:id;type:int(11);primaryKey;autoIncrement:true" json:"id"`
-	Name      string    `gorm:"column:name;type:varchar(20);not null;comment:类目名称" json:"name"`      // 类目名称
-	ParentID  int32     `gorm:"column:parent_id;type:int(11);not null;comment:父id" json:"parent_id"` // 父id
-	IsParent  bool      `gorm:"column:is_parent;type:tinyint(1);comment:是否是父id" json:"is_parent"`    // 是否是父id
-	Sort      int32     `gorm:"column:sort;type:int(11);comment:排序" json:"sort"`                     // 排序
-	CreatedAt time.Time `gorm:"column:created_at;type:datetime" json:"created_at"`
-	UpdatedAt time.Time `gorm:"column:updated_at;type:datetime" json:"updated_at"`
+	ID        int32      `gorm:"column:id;type:int(11);primaryKey;autoIncrement:true" json:"id"`
+	Name      string     `gorm:"column:name;type:varchar(20);not null;comment:类目名称" json:"name"`      // 类目名称
+	ParentID  int32      `gorm:"column:parent_id;type:int(11);not null;comment:父id" json:"parent_id"` // 父id
+	IsParent  *bool      `gorm:"column:is_parent;type:tinyint(1);comment:是否是父id" json:"is_parent"`    // 是否是父id
+	Sort      *int32     `gorm:"column:sort;type:int(11);comment:排序" json:"sort"`                     // 排序
+	CreatedAt *time.Time `gorm:"column:created_at;type:datetime" json:"created_at"`
+	UpdatedAt *time.Time `gorm:"column:updated_at;type:datetime" json:"updated_at"`
 }
 
 // TableName Category's table name

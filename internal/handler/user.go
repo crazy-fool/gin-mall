@@ -29,7 +29,7 @@ func (h *userHandler) Register(ctx *gin.Context) {
 	}
 
 	if err := service.GetUserService().Register(ctx, req); err != nil {
-		resp.ResponseError(ctx, resp.OpFailed)
+		resp.ResponseErrorWithMsg(ctx, resp.CustomerRegisterFailed, err.Error())
 		return
 	}
 

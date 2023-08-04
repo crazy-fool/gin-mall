@@ -10,17 +10,19 @@ const ResourceNotFound = 4          //	数据不存在
 const SignFailed = 5                //	签名失败
 const CheckSignFailed = 6           //	验签失败
 
-const CustomerNotFound = 101 //	用户不存在
-const LoginFailed = 102      //	登录失败
-const CustomerNotLogin = 103 //	未登录
+const CustomerNotFound = 101       //	用户不存在
+const LoginFailed = 102            //	登录失败
+const CustomerNotLogin = 103       //	未登录
+const CustomerRegisterFailed = 104 //	未登录
 
 var responseMessage = map[int]string{
 
-	SuccessCode:      "success",
-	ParamError:       "请求参数有误",
-	OpFailed:         "操作失败",
-	ResourceNotFound: "数据不存在",
-	CustomerNotFound: "用户不存在",
-	LoginFailed:      "登录失败",
-	CustomerNotLogin: "用户未登录",
+	SuccessCode:            "success",
+	ParamError:             "请求参数有误",
+	OpFailed:               "操作失败",
+	ResourceNotFound:       "数据不存在",
+	CustomerNotFound:       "用户不存在",
+	LoginFailed:            "登录失败",
+	CustomerNotLogin:       "用户未登录",
+	CustomerRegisterFailed: "注册失败",
 }

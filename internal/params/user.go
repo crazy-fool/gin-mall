@@ -1,11 +1,14 @@
 package params
 
+import "time"
+
 type RegisterParam struct {
-	Name     string `json:"name" binding:"required"`
-	Password string `json:"password" binding:"required"`
-	Account  string `json:"account" binding:"required"`
-	Mobile   string `json:"mobile" binding:"required"`
-	Id       int32  `json:"id"`
+	Name        *string `json:"name" binding:"required"`
+	Password    *string `json:"password" binding:"required"`
+	Account     string  `json:"account" binding:"required"`
+	Mobile      *string `json:"mobile" binding:"required"`
+	LastLoginAt *time.Time
+	Id          int32 `json:"id"`
 }
 
 type LoginParam struct {

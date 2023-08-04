@@ -25,16 +25,16 @@ func GetUserService() UserService {
 func (s *userService) Register(ctx context.Context, param *params.RegisterParam) error {
 	// 检查用户名是否已存在
 	if user, err := repository.GetUserRepo().GetByAccount(ctx, param.Account); err == nil && user != nil {
-		return errors.New("username already exists")
+		return errors.New("用户已存在")
 	}
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(param.Password), bcrypt.DefaultCost)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(*param.Password), bcrypt.DefaultCost)
 	if err != nil {
-		return errors.Wrap(err, "failed to hash password")
+		return errors.Wrap(err, "请重试")
 	}
-	param.Password = string(hashedPassword)
+	*param.Password = string(hashedPassword)
 
 	if _, err := repository.GetUserRepo().SaveData(ctx, param); err != nil {
-		return errors.Wrap(err, "failed to create user")
+		return errors.Wrap(err, "请重试！")
 	}
 	return nil
 }
@@ -44,7 +44,7 @@ func (s *userService) Login(ctx context.Context, req *params.LoginParam) (string
 	if err != nil || user == nil {
 		return "", errors.New("failed to get user by account")
 	}
-	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password))
+	err = bcrypt.CompareHashAndPassword([]byte(*user.Password), []byte(req.Password))
 	if err != nil {
 		return "", errors.Wrap(err, "failed to hash password")
 	}

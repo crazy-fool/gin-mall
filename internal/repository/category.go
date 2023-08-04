@@ -51,7 +51,7 @@ func (r *categoryRepository) SaveData(ctx context.Context, param *params.Categor
 	}
 	t := query.Use(r.db).Category
 	if param.IsParent != nil {
-		cate.IsParent = *param.IsParent == 1
+		cate.IsParent = param.IsParent
 	}
 
 	if param.Name != "" {
@@ -59,7 +59,7 @@ func (r *categoryRepository) SaveData(ctx context.Context, param *params.Categor
 	}
 
 	if param.Sort != nil {
-		cate.Sort = *param.Sort
+		cate.Sort = param.Sort
 	}
 
 	if param.ParentId != nil {

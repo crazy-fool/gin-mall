@@ -48,11 +48,11 @@ func (r *userRepository) SaveData(ctx context.Context, param *params.RegisterPar
 		customer = c
 	}
 	t := query.Use(r.db).Customer
-	if param.Name != "" {
+	if param.Name != nil && *param.Name != "" {
 		customer.Name = param.Name
 	}
 
-	if param.Password != "" {
+	if param.Password != nil && *param.Password != "" {
 		customer.Password = param.Password
 	}
 
@@ -60,8 +60,12 @@ func (r *userRepository) SaveData(ctx context.Context, param *params.RegisterPar
 		customer.Account = param.Account
 	}
 
-	if param.Mobile != "" {
+	if param.Mobile != nil && *param.Mobile != "" {
 		customer.Mobile = param.Mobile
+	}
+
+	if param.LastLoginAt != nil {
+		customer.LastLoginAt = param.LastLoginAt
 	}
 
 	if customer.Code == "" {

@@ -40,12 +40,12 @@ func (h *categoryHandler) Edit(ctx *gin.Context) {
 
 // List 带分页的分类列表
 func (h *categoryHandler) List(ctx *gin.Context) {
-	var param params.CategoryListParam
-	if err := ctx.ShouldBindUri(&param); err != nil {
+	param := new(params.CategoryListParam)
+	if err := ctx.ShouldBind(param); err != nil {
 		resp.ResponseError(ctx, resp.ParamError)
 		return
 	}
-	ret := service.GetCategoryService().GetPageList(ctx, &param)
+	ret := service.GetCategoryService().GetPageList(ctx, param)
 	resp.HandleSuccess(ctx, ret)
 }
 
