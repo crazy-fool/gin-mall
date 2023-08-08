@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	srv := asynq.NewServer(asynq.RedisClientOpt{Addr: "127.0.0.1:6379"},
+	srv := asynq.NewServer(asynq.RedisClientOpt{Addr: "146.56.205.28:6379", DB: 0},
 		asynq.Config{
 			Concurrency: 10,
 			Queues: map[string]int{

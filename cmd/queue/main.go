@@ -8,8 +8,13 @@ import (
 )
 
 func main() {
-	client := asynq.NewClient(asynq.RedisClientOpt{Addr: "127.0.0.1:6379"})
-	defer client.Close()
+	client := asynq.NewClient(asynq.RedisClientOpt{Addr: "146.56.205.28:6379"})
+	defer func(client *asynq.Client) {
+		err := client.Close()
+		if err != nil {
+			log.Println("error", err)
+		}
+	}(client)
 	var wg sync.WaitGroup
 	for i := 1; i <= 100; i++ {
 		wg.Add(1)

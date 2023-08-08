@@ -11,7 +11,7 @@ data:
   mysql:
     user: root:root@tcp(127.0.0.1:3306)/hmh_mall?charset=utf8mb4&parseTime=True&loc=Local
   redis:
-    addr: 127.0.0.1:6379
+    addr: 146.56.205.28:6379
     password: ""
     db: 0
     read_timeout: 0.2s
