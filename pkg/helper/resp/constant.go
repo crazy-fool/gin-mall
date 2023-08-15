@@ -9,6 +9,7 @@ const OpFailed = 3                  //	操作失败
 const ResourceNotFound = 4          //	数据不存在
 const SignFailed = 5                //	签名失败
 const CheckSignFailed = 6           //	验签失败
+const DecryptedFailed = 7           //	验签失败
 
 const CustomerNotFound = 101       //	用户不存在
 const LoginFailed = 102            //	登录失败
@@ -25,4 +26,5 @@ var responseMessage = map[int]string{
 	LoginFailed:            "登录失败",
 	CustomerNotLogin:       "用户未登录",
 	CustomerRegisterFailed: "注册失败",
+	DecryptedFailed:        "请求参数解析失败",
 }

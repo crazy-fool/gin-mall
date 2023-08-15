@@ -1,16 +1,40 @@
 package middleware
 
 import (
+	"bytes"
+	"gin-mall/pkg/helper/aesutil"
+	"gin-mall/pkg/helper/resp"
+	"gin-mall/pkg/log"
 	"github.com/gin-gonic/gin"
+	"io"
 )
 
+var aesRequestUtil aesutil.UtilAes
+
+func init() {
+	key := "12345678901234567890123456789012"
+	aesRequestUtil = aesutil.NewPkcs7Cbc([]byte(key))
+}
+
+// AesMiddleware 请求参数加密
 func AesMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		//		body := []byte(`{
-		//    "account" :"15838333913",
-		//    "password":"12345678"
-		//}`)
-		//		c.Request.Body = io.NopCloser(bytes.NewBuffer(body))
+		body := c.Request.Body
+		data, err := io.ReadAll(body)
+		if err != nil {
+			log.GetLog().Error("[aes数据加密] error" + err.Error())
+			resp.ResponseError(c, resp.DecryptedFailed)
+			return
+		}
+		log.GetLog().Debug("[aes数据加密] data" + string(data))
+		decrypted, err := aesRequestUtil.Base64Decrypted(string(data))
+		if err != nil {
+			log.GetLog().Error("[aes数据加密] error" + err.Error())
+			resp.ResponseError(c, resp.DecryptedFailed)
+			return
+		}
+		log.GetLog().Debug("[aes数据加密] 解密data" + decrypted)
+		c.Request.Body = io.NopCloser(bytes.NewBuffer([]byte(decrypted)))
 		c.Next()
 	}
 }
