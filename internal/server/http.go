@@ -18,6 +18,7 @@ func NewServerHTTP() *gin.Engine {
 		middleware.ResponseLogMiddleware(),
 		middleware.RequestLogMiddleware(),
 		//middleware.SignMiddleware(),
+		middleware.AesMiddleware(),
 	)
 	rootGroup := r.Group("/api/")
 	userHandler := handler.GetUserHandler()

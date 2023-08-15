@@ -3,11 +3,10 @@ package service
 import (
 	"context"
 	"gin-mall/internal/gen/model"
-	"gin-mall/internal/params"
 )
 
 type SpuService interface {
-	EditSpu(ctx context.Context, req *params.EditSpuParam) (model.Spu, error)
+	EditSpu(ctx context.Context) (model.Spu, error)
 }
 type spuService struct{}
 
@@ -15,6 +14,6 @@ func GetSpuService() UserService {
 	return userSvc
 }
 
-func (s *spuService) EditSpu(ctx context.Context, req *params.EditSpuParam) {
+func (s *spuService) EditSpu(ctx context.Context) {
 
 }
