@@ -19,8 +19,7 @@ func init() {
 // AesMiddleware 请求参数加密
 func AesMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		body := c.Request.Body
-		data, err := io.ReadAll(body)
+		data, err := c.GetRawData()
 		if err != nil {
 			log.GetLog().Error("[aes数据加密] error" + err.Error())
 			resp.ResponseError(c, resp.DecryptedFailed)
