@@ -28,7 +28,7 @@ func (h *userHandler) Register(ctx *gin.Context) {
 		return
 	}
 
-	if err := service.GetUserService().Register(ctx, req); err != nil {
+	if err := service.GetUserService().Register(ctx.Request.Context(), req); err != nil {
 		resp.ResponseErrorWithMsg(ctx, resp.CustomerRegisterFailed, err.Error())
 		return
 	}
@@ -43,7 +43,7 @@ func (h *userHandler) Login(ctx *gin.Context) {
 		return
 	}
 
-	token, err := service.GetUserService().Login(ctx, &req)
+	token, err := service.GetUserService().Login(ctx.Request.Context(), &req)
 	if err != nil {
 		resp.ResponseErrorWithMsg(ctx, resp.CommonError, err.Error())
 		return

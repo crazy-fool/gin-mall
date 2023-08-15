@@ -30,7 +30,7 @@ func (h *categoryHandler) Edit(ctx *gin.Context) {
 		resp.ResponseError(ctx, resp.ParamError)
 		return
 	}
-	if err := service.GetCategoryService().Edit(ctx, &param); err != nil {
+	if err := service.GetCategoryService().Edit(ctx.Request.Context(), &param); err != nil {
 		log.GetLog().Info("操作失败", zap.Error(err))
 		resp.ResponseError(ctx, resp.OpFailed)
 		return
@@ -45,7 +45,7 @@ func (h *categoryHandler) List(ctx *gin.Context) {
 		resp.ResponseError(ctx, resp.ParamError)
 		return
 	}
-	ret := service.GetCategoryService().GetPageList(ctx, param)
+	ret := service.GetCategoryService().GetPageList(ctx.Request.Context(), param)
 	resp.HandleSuccess(ctx, ret)
 }
 
@@ -54,7 +54,7 @@ func (h *categoryHandler) OneList(ctx *gin.Context) {
 	param := &params.CategoryListParam{
 		ParentId: new(int32),
 	}
-	ret := service.GetCategoryService().GetList(ctx, param)
+	ret := service.GetCategoryService().GetList(ctx.Request.Context(), param)
 	resp.HandleSuccess(ctx, ret)
 }
 
@@ -68,6 +68,6 @@ func (h *categoryHandler) SonList(ctx *gin.Context) {
 
 	log.GetLog().Info("查询分类", zap.Any("param", param))
 
-	ret := service.GetCategoryService().GetList(ctx, &param)
+	ret := service.GetCategoryService().GetList(ctx.Request.Context(), &param)
 	resp.HandleSuccess(ctx, ret)
 }
