@@ -20,7 +20,7 @@ func init() {
 // AesMiddleware 请求参数加密
 func AesMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if config.GetConfig().GetString("env") == "prod" {
+		if config.GetConfig().GetString("env") != "prod" {
 			c.Next()
 			return
 		}
