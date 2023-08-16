@@ -26,7 +26,7 @@ WORKDIR /bin/
 # 将上个容器编译的二进制文件复制到 工作目录
 # 也就是：copy golang环境/工作目录/demo alpine环境/工作目录
 COPY --from=builder /app/server .
-COPY --from=builder /app/config/* ./config/*
+COPY --from=builder /app/config/* ./config/
 
 # 所以这里执行的命令是：/bin/server
 ENTRYPOINT ["/bin/server"]
