@@ -9,6 +9,7 @@ func init() {
 	service := new(service)
 	userSvc = &userService{}
 	categorySvc = &categoryService{service}
+	spuSvc = &spuService{service}
 }
 
 type service struct {
@@ -16,6 +17,7 @@ type service struct {
 
 var userSvc *userService
 var categorySvc *categoryService
+var spuSvc *spuService
 
 func (s *service) GetPage(total int64, result any) map[string]any {
 

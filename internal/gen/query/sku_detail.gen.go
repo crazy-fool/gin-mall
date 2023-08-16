@@ -28,6 +28,12 @@ func newSkuDetail(db *gorm.DB, opts ...gen.DOOption) skuDetail {
 	tableName := _skuDetail.skuDetailDo.TableName()
 	_skuDetail.ALL = field.NewAsterisk(tableName)
 	_skuDetail.ID = field.NewInt32(tableName, "id")
+	_skuDetail.SkuID = field.NewInt32(tableName, "sku_id")
+	_skuDetail.Images = field.NewString(tableName, "images")
+	_skuDetail.Indexes = field.NewString(tableName, "indexes")
+	_skuDetail.OwnSpec = field.NewString(tableName, "own_spec")
+	_skuDetail.CreatedAt = field.NewTime(tableName, "created_at")
+	_skuDetail.UpdatedAt = field.NewTime(tableName, "updated_at")
 
 	_skuDetail.fillFieldMap()
 
@@ -37,8 +43,14 @@ func newSkuDetail(db *gorm.DB, opts ...gen.DOOption) skuDetail {
 type skuDetail struct {
 	skuDetailDo skuDetailDo
 
-	ALL field.Asterisk
-	ID  field.Int32
+	ALL       field.Asterisk
+	ID        field.Int32
+	SkuID     field.Int32
+	Images    field.String
+	Indexes   field.String
+	OwnSpec   field.String
+	CreatedAt field.Time
+	UpdatedAt field.Time
 
 	fieldMap map[string]field.Expr
 }
@@ -56,6 +68,12 @@ func (s skuDetail) As(alias string) *skuDetail {
 func (s *skuDetail) updateTableName(table string) *skuDetail {
 	s.ALL = field.NewAsterisk(table)
 	s.ID = field.NewInt32(table, "id")
+	s.SkuID = field.NewInt32(table, "sku_id")
+	s.Images = field.NewString(table, "images")
+	s.Indexes = field.NewString(table, "indexes")
+	s.OwnSpec = field.NewString(table, "own_spec")
+	s.CreatedAt = field.NewTime(table, "created_at")
+	s.UpdatedAt = field.NewTime(table, "updated_at")
 
 	s.fillFieldMap()
 
@@ -82,8 +100,14 @@ func (s *skuDetail) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (s *skuDetail) fillFieldMap() {
-	s.fieldMap = make(map[string]field.Expr, 1)
+	s.fieldMap = make(map[string]field.Expr, 7)
 	s.fieldMap["id"] = s.ID
+	s.fieldMap["sku_id"] = s.SkuID
+	s.fieldMap["images"] = s.Images
+	s.fieldMap["indexes"] = s.Indexes
+	s.fieldMap["own_spec"] = s.OwnSpec
+	s.fieldMap["created_at"] = s.CreatedAt
+	s.fieldMap["updated_at"] = s.UpdatedAt
 }
 
 func (s skuDetail) clone(db *gorm.DB) skuDetail {

@@ -4,11 +4,23 @@
 
 package model
 
+import (
+	"time"
+)
+
 const TableNameSpuDetail = "hmh_spu_detail"
 
 // SpuDetail mapped from table <hmh_spu_detail>
 type SpuDetail struct {
-	ID int32 `gorm:"column:id;type:int(11);primaryKey;autoIncrement:true" json:"id"`
+	ID           int32      `gorm:"column:id;type:int(11);primaryKey;autoIncrement:true" json:"id"`
+	SpuID        int32      `gorm:"column:spu_id;type:int(11);not null" json:"spu_id"`
+	Description  *string    `gorm:"column:description;type:text" json:"description"`
+	GenericSpec  *string    `gorm:"column:generic_spec;type:varchar(1000)" json:"generic_spec"`
+	SpecialSpec  *string    `gorm:"column:special_spec;type:varchar(1000)" json:"special_spec"`
+	PackageList  *string    `gorm:"column:package_list;type:varchar(1000)" json:"package_list"`
+	AfterService *string    `gorm:"column:after_service;type:varchar(1000)" json:"after_service"`
+	CreatedAt    *time.Time `gorm:"column:created_at;type:datetime" json:"created_at"`
+	UpdatedAt    *time.Time `gorm:"column:updated_at;type:datetime" json:"updated_at"`
 }
 
 // TableName SpuDetail's table name

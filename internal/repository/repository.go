@@ -21,12 +21,14 @@ func newRepo() {
 	userRepo = &userRepository{Repository: repo}
 	spuRepo = &spuRepository{Repository: repo}
 	categoryRepo = &categoryRepository{Repository: repo}
+	specRepo = &specRepository{Repository: repo}
 }
 
 var repo *Repository
 var userRepo *userRepository
 var spuRepo *spuRepository
 var categoryRepo *categoryRepository
+var specRepo *specRepository
 
 type Repository struct {
 	db  *gorm.DB

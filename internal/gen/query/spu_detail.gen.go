@@ -28,6 +28,14 @@ func newSpuDetail(db *gorm.DB, opts ...gen.DOOption) spuDetail {
 	tableName := _spuDetail.spuDetailDo.TableName()
 	_spuDetail.ALL = field.NewAsterisk(tableName)
 	_spuDetail.ID = field.NewInt32(tableName, "id")
+	_spuDetail.SpuID = field.NewInt32(tableName, "spu_id")
+	_spuDetail.Description = field.NewString(tableName, "description")
+	_spuDetail.GenericSpec = field.NewString(tableName, "generic_spec")
+	_spuDetail.SpecialSpec = field.NewString(tableName, "special_spec")
+	_spuDetail.PackageList = field.NewString(tableName, "package_list")
+	_spuDetail.AfterService = field.NewString(tableName, "after_service")
+	_spuDetail.CreatedAt = field.NewTime(tableName, "created_at")
+	_spuDetail.UpdatedAt = field.NewTime(tableName, "updated_at")
 
 	_spuDetail.fillFieldMap()
 
@@ -37,8 +45,16 @@ func newSpuDetail(db *gorm.DB, opts ...gen.DOOption) spuDetail {
 type spuDetail struct {
 	spuDetailDo spuDetailDo
 
-	ALL field.Asterisk
-	ID  field.Int32
+	ALL          field.Asterisk
+	ID           field.Int32
+	SpuID        field.Int32
+	Description  field.String
+	GenericSpec  field.String
+	SpecialSpec  field.String
+	PackageList  field.String
+	AfterService field.String
+	CreatedAt    field.Time
+	UpdatedAt    field.Time
 
 	fieldMap map[string]field.Expr
 }
@@ -56,6 +72,14 @@ func (s spuDetail) As(alias string) *spuDetail {
 func (s *spuDetail) updateTableName(table string) *spuDetail {
 	s.ALL = field.NewAsterisk(table)
 	s.ID = field.NewInt32(table, "id")
+	s.SpuID = field.NewInt32(table, "spu_id")
+	s.Description = field.NewString(table, "description")
+	s.GenericSpec = field.NewString(table, "generic_spec")
+	s.SpecialSpec = field.NewString(table, "special_spec")
+	s.PackageList = field.NewString(table, "package_list")
+	s.AfterService = field.NewString(table, "after_service")
+	s.CreatedAt = field.NewTime(table, "created_at")
+	s.UpdatedAt = field.NewTime(table, "updated_at")
 
 	s.fillFieldMap()
 
@@ -82,8 +106,16 @@ func (s *spuDetail) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (s *spuDetail) fillFieldMap() {
-	s.fieldMap = make(map[string]field.Expr, 1)
+	s.fieldMap = make(map[string]field.Expr, 9)
 	s.fieldMap["id"] = s.ID
+	s.fieldMap["spu_id"] = s.SpuID
+	s.fieldMap["description"] = s.Description
+	s.fieldMap["generic_spec"] = s.GenericSpec
+	s.fieldMap["special_spec"] = s.SpecialSpec
+	s.fieldMap["package_list"] = s.PackageList
+	s.fieldMap["after_service"] = s.AfterService
+	s.fieldMap["created_at"] = s.CreatedAt
+	s.fieldMap["updated_at"] = s.UpdatedAt
 }
 
 func (s spuDetail) clone(db *gorm.DB) spuDetail {

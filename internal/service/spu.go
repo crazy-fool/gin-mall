@@ -3,17 +3,18 @@ package service
 import (
 	"context"
 	"gin-mall/internal/gen/model"
+	"gin-mall/internal/params"
 )
 
 type SpuService interface {
-	EditSpu(ctx context.Context) (model.Spu, error)
+	EditSpu(ctx context.Context, param *params.SpuEditParam) (model.Spu, error)
 }
-type spuService struct{}
+type spuService struct{ *service }
 
-func GetSpuService() UserService {
-	return userSvc
+func GetSpuService() SpuService {
+	return spuSvc
 }
 
-func (s *spuService) EditSpu(ctx context.Context) {
-
+func (s *spuService) EditSpu(ctx context.Context, param *params.SpuEditParam) (model.Spu, error) {
+	panic("1")
 }
