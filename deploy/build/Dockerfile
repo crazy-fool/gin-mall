@@ -1,33 +1,36 @@
-FROM golang:1.18-alpine3.16 AS builder
-RUN set -eux && sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories
+# 构建golang运行环境 使用别名：builder
+FROM golang:1.19 as builder
 
-ARG APP_RELATIVE_PATH
+# 设置环境变量
+ENV HOME /app
+ENV CGO_ENABLED 0
+ENV GOOS linux
 
-COPY .. /data/app
-WORKDIR /data/app
+# 设置工作目录 - 我们所有的文件都存放在工作目录中 
+# 目前来说：COPY go.mod go.sum ./ && COPY . .
+# golang的docker环境中会出现：
+## /app/build/Dockerfile
+## /app/cmd/demo/main.go
+## /app/go.mod
+## /app/README.MD
+WORKDIR /app
+COPY . .
+# 下载依赖
+RUN go mod download
 
-RUN rm -rf /data/app/bin/
-RUN export GOPROXY=https://goproxy.cn,direct && go mod tidy && go build -ldflags="-s -w" -o ./bin/server ${APP_RELATIVE_PATH}
-RUN mv config /data/app/bin/
+# 编译app
+RUN go build -v -a -installsuffix cgo -o server cmd/server/main.go
 
+FROM alpine:latest
 
-FROM alpine:3.16
-RUN set -eux && sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories
+RUN apk --no-cache add ca-certificates
 
+# 设置工作目录
+WORKDIR /bin/
 
-RUN apk add tzdata && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
-    && echo "Asia/Shanghai" > /etc/timezone \
-    && apk del tzdata
+# 将上个容器编译的二进制文件复制到 工作目录
+# 也就是：copy golang环境/工作目录/demo alpine环境/工作目录
+COPY --from=builder /app/server .
 
-
-ARG APP_ENV
-ENV APP_ENV=${APP_ENV}
-
-WORKDIR /data/app
-COPY --from=builder /data/app/bin /data/app
-
-EXPOSE 8000
-ENTRYPOINT [ "./server" ]
-
-#docker build -t  1.1.1.1:5000/demo-api:v1 --build-arg APP_CONF=config/prod.yml --build-arg  APP_RELATIVE_PATH=./cmd/server/...  .
-#docker run -it --rm --entrypoint=ash 1.1.1.1:5000/demo-api:v1
+# 所以这里执行的命令是：/bin/server
+ENTRYPOINT ["/bin/server"]
