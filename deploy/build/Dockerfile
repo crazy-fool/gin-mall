@@ -1,5 +1,5 @@
 # 构建golang运行环境 使用别名：builder
-FROM golang:1.19 as builder
+FROM golang:1.18-alpine as builder
 
 # 设置环境变量
 ENV HOME /app
