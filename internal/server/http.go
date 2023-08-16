@@ -44,6 +44,7 @@ func NewServerHTTP() *gin.Engine {
 	//}
 
 	categoryHandler := handler.GetCategoryHandler()
+	specHandler := handler.GetSpecHandler()
 	// Strict permission routing group
 	strictAuthRouter := rootGroup.Group("/").Use(auth.StrictAuth())
 	{
@@ -51,6 +52,11 @@ func NewServerHTTP() *gin.Engine {
 		strictAuthRouter.GET("v1/category/list", categoryHandler.List)
 		strictAuthRouter.GET("v1/category/one-list", categoryHandler.OneList)
 		strictAuthRouter.GET("v1/category/son-list", categoryHandler.SonList)
+
+		strictAuthRouter.GET("v1/spec/group-list", specHandler.GroupList)
+		strictAuthRouter.POST("v1/spec/group-edit", specHandler.EditSpecGroup)
+		strictAuthRouter.GET("v1/spec/list", specHandler.SpecList)
+		strictAuthRouter.POST("v1/spec/edit", specHandler.EditSpec)
 	}
 	return r
 }

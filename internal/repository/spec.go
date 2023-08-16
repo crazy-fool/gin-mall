@@ -54,13 +54,13 @@ func (s *specRepository) SaveSpecData(ctx context.Context, param *params.SpecEdi
 		spec.GroupID = &param.GroupId
 	}
 	if param.IsGenerate != nil {
-		IsGenerate := *param.IsGenerate == 1
-		spec.IsGenerate = &IsGenerate
+		isGenerate := *param.IsGenerate == 1
+		spec.IsGenerate = &isGenerate
 	}
 
 	if param.Searching != nil {
 		searching := *param.Searching == 1
-		spec.IsGenerate = &searching
+		spec.Searching = &searching
 	}
 
 	err := t.WithContext(ctx).Save(spec)
@@ -90,7 +90,7 @@ func (s *specRepository) SaveGroupData(ctx context.Context, param *params.GroupE
 	return spec.ID, err
 }
 
-func (s specRepository) GetSpecPage(ctx context.Context, param *params.SpecListParam) (result []*model.Spec, count int64, err error) {
+func (s *specRepository) GetSpecPage(ctx context.Context, param *params.SpecListParam) (result []*model.Spec, count int64, err error) {
 	return s.getSpecQuery(ctx, param).FindByPage(param.OffsetLimit())
 }
 

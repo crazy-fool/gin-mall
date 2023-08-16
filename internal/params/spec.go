@@ -1,7 +1,7 @@
 package params
 
 type SpecEditParam struct {
-	Id         int32  `json:"id" binding:"required"`
+	Id         int32  `json:"id"`
 	Name       string `json:"name" binding:"required"`
 	CategoryId int32  `json:"category_id" binding:"required"`
 	GroupId    int32  `json:"group_id" binding:"required"`
@@ -14,7 +14,7 @@ type SpecListParam struct {
 }
 
 type GroupEditParam struct {
-	Id         int32  `json:"id" binding:"required"`
+	Id         int32  `json:"id" `
 	Name       string `json:"name" binding:"required"`
 	CategoryId int32  `json:"category_id" binding:"required"`
 }
