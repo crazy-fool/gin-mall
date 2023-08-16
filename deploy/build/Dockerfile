@@ -16,6 +16,7 @@ ENV GOOS linux
 WORKDIR /app
 COPY . .
 # 下载依赖
+RUN go env -w GOPROXY=https://goproxy.cn,direct
 RUN go mod download
 
 # 编译app
