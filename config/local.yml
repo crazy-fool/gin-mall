@@ -9,9 +9,9 @@ security:
     key: 1234
 data:
   mysql:
-    user: root:123456@tcp(146.56.205.28:3380)/hmh_mall?charset=utf8mb4&parseTime=True&loc=Local
+    user: root:123456@tcp(*.*.*.*:3380)/hmh_mall?charset=utf8mb4&parseTime=True&loc=Local
   redis:
-    addr: 146.56.205.28:6350
+    addr: *.*.*.*:6350
     password: ""
     db: 0
     read_timeout: 0.2s
